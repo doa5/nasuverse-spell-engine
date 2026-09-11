@@ -4,11 +4,13 @@ namespace NasuverseSpellEngine
     {
         public string Name { get; }
         public ResourcePool Resources { get; }
+        public List<Spell> AvailableSpells { get; }
 
         public Character(string name, ResourcePool resources)
         {
             Name = name;
             Resources = resources;
+            AvailableSpells = new List<Spell>();
         }
 
         public string CastSpell(Spell spell, TaigaDojo dojo)
