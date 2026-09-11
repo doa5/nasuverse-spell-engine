@@ -4,7 +4,7 @@ namespace NasuverseSpellEngine
     {
         public int Mana { get; private set; }
 
-        public ResourcePool(int initialMana = 50)
+        public ResourcePool(int initialMana)
         {
             Mana = initialMana;
         }
