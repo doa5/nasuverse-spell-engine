@@ -1,7 +1,7 @@
 ﻿using NasuverseSpellEngine;
 using Microsoft.Extensions.Logging;
 
-using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
+using var loggerFactory = LoggerFactory.Create(builder => builder.AddDebug().SetMinimumLevel(LogLevel.Debug));
 ILogger logger = loggerFactory.CreateLogger<Program>();
 ILogger<Character> charLogger = loggerFactory.CreateLogger<Character>();
 ILogger<ResourcePool> resourceLogger = loggerFactory.CreateLogger<ResourcePool>();
@@ -46,6 +46,14 @@ while (isTraining)
         continue;
     }
 
+    // Allow exit even when dojo destroyed
+    if (choice == exitOption)
+    {
+        logger.LogInformation("User selected Exit");
+        isTraining = false;
+        continue;
+    }
+
     if (dojo.TargetHP <= 0)
     {
         logger.LogInformation("Attempt to cast on destroyed dojo (HP {HP})", dojo.TargetHP);
@@ -53,13 +61,17 @@ while (isTraining)
         continue;
     }
 
-    isTraining = choice switch
+    // Dispatch by index (scales with number of spells)
+    int spellIndex = choice - 1; 
+    if (spellIndex < 0 || spellIndex >= aoko.AvailableSpells.Count)
     {
-        1 => HandleSpellCast(aoko, dojo, 0),
-        2 => HandleSpellCast(aoko, dojo, 1),
-        3 => false,
-        _ => true
-    };
+        logger.LogWarning("Computed spell index out of range: {Index}", spellIndex);
+        Console.WriteLine("Invalid spell selection. Try again.\n");
+        continue;
+    }
+
+    // Single exit flag controls loop
+    isTraining = HandleSpellCast(aoko, dojo, spellIndex);
 
     if (dojo.TargetHP <= 0)
     {
