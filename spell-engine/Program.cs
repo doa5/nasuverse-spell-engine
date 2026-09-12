@@ -92,8 +92,8 @@ static Character CreateAoko(ILogger<Character> logger, ILogger<ResourcePool> res
     var pool = new ResourcePool(500, resourceLogger);
     Character aoko = new Character("Aoko", pool, logger);
 
-    Spell snapAndDraw = new Spell("Snap & Draw", manaCost: 20, damage: 5);
-    Spell earthlightStarbow = new Spell("Earthlight Starbow", manaCost: 50, damage: 35);
+    Spell snapAndDraw = new Spell("Snap & Draw", manaCost: 20, new DamageEffect(5));
+    Spell earthlightStarbow = new Spell("Earthlight Starbow", manaCost: 50, new DamageEffect(35));
 
     aoko.AvailableSpells.Add(earthlightStarbow);
     aoko.AvailableSpells.Add(snapAndDraw);

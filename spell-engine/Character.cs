@@ -23,10 +23,16 @@ namespace NasuverseSpellEngine
             _logger.LogDebug("{Character} attempts to cast {Spell} (cost {Cost}), current mana {Mana}", Name, spell.Name, spell.ManaCost, Resources.Mana);
 
             if (Resources.TryConsume(spell.ManaCost))
-            { 
+            {
                 int oldHp = dojo.TargetHP;
-                dojo.TargetHP -= spell.Damage;
-                _logger.LogInformation("{Character} successfully cast {Spell} dealing {Damage} (DojoHP {Old} -> {New}). Remaining mana: {Mana}", Name, spell.Name, spell.Damage, oldHp, dojo.TargetHP, Resources.Mana);
+
+                foreach (ISpellEffect effect in spell.Effects)
+                {
+                    _logger.LogDebug("{Character} applies {EffectType} from {Spell}", Name, effect.GetType().Name, spell.Name);
+                    effect.Apply(this, dojo);
+                }
+
+                _logger.LogInformation("{Character} successfully cast {Spell} with {EffectCount} effect(s) (DojoHP {Old} -> {New}). Remaining mana: {Mana}", Name, spell.Name, spell.Effects.Count, oldHp, dojo.TargetHP, Resources.Mana);
                 return $"{Name} cast {spell.Name}! Dealt {spell.Damage} damage.";
             }
 
