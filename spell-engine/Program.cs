@@ -4,11 +4,13 @@ using Microsoft.Extensions.Logging;
 using var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
 ILogger logger = loggerFactory.CreateLogger<Program>();
 ILogger<Character> charLogger = loggerFactory.CreateLogger<Character>();
+ILogger<ResourcePool> resourceLogger = loggerFactory.CreateLogger<ResourcePool>();
+ILogger<TaigaDojo> dojoLogger = loggerFactory.CreateLogger<TaigaDojo>();
 
 logger.LogInformation("Starting Taiga Dojo sandbox");
 
-TaigaDojo dojo = new TaigaDojo();
-Character aoko = CreateAoko();
+TaigaDojo dojo = new TaigaDojo(100, dojoLogger);
+Character aoko = CreateAoko(charLogger, resourceLogger);
 
 Console.WriteLine($"Welcome to the Taiga Dojo with {aoko.Name}!");
 Console.WriteLine($"Initial Mana: {aoko.Resources.Mana}, Dojo HP: {dojo.TargetHP}\n");
@@ -30,18 +32,23 @@ while (isTraining)
 
     if (!int.TryParse(input, out int choice))
     {
+        logger.LogWarning("Invalid input (non-numeric): {Input}", input);
         Console.WriteLine("That's not a number. Try again.\n");
         continue;
     }
 
+    logger.LogDebug("User selected {Choice}", choice);
+
     if (choice < 1 || choice > exitOption)
     {
+        logger.LogWarning("Choice out of range: {Choice}", choice);
         Console.WriteLine("Invalid choice. Try again.\n");
         continue;
     }
 
     if (dojo.TargetHP <= 0)
     {
+        logger.LogInformation("Attempt to cast on destroyed dojo (HP {HP})", dojo.TargetHP);
         Console.WriteLine("Taiga: The dojo has already been destroyed! What are you doing??\n");
         continue;
     }
@@ -68,9 +75,10 @@ static bool HandleSpellCast(Character character, TaigaDojo dojo, int spellIndex)
     return true;
 }
 
-static Character CreateAoko()
+static Character CreateAoko(ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
 {
-    Character aoko = new Character("Aoko", new ResourcePool(initialMana: 500));
+    var pool = new ResourcePool(500, resourceLogger);
+    Character aoko = new Character("Aoko", pool, logger);
 
     Spell snapAndDraw = new Spell("Snap & Draw", manaCost: 20, damage: 5);
     Spell earthlightStarbow = new Spell("Earthlight Starbow", manaCost: 50, damage: 35);
