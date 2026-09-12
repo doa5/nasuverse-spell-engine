@@ -2,15 +2,17 @@ namespace NasuverseSpellEngine
 {
     public class Spell
     {
-        public string Name { get; set; }
-        public int ManaCost { get; set; }
-        public int Damage { get; set; }
+        public string Name { get; }
+        public int ManaCost { get; }
+        public List<ISpellEffect> Effects { get; }
 
-        public Spell(string name, int manaCost, int damage)
+        public int Damage => Effects.OfType<DamageEffect>().Sum(effect => effect.Damage);
+
+        public Spell(string name, int manaCost, DamageEffect damageEffect)
         {
             Name = name;
             ManaCost = manaCost;
-            Damage = damage;
+            Effects = new List<ISpellEffect> { damageEffect };
         }
     }
 }
