@@ -11,20 +11,58 @@ logger.LogInformation("Starting Taiga Dojo sandbox");
 
 TaigaDojo dojo = new TaigaDojo(100, dojoLogger);
 Character aoko = CreateAoko(charLogger, resourceLogger);
+Character arcuied = CreateArcueid(charLogger, resourceLogger);
+Character selectedCharacter = aoko;
 
-Console.WriteLine($"Welcome to the Taiga Dojo with {aoko.Name}!");
-Console.WriteLine($"Initial Mana: {aoko.Resources.Mana}, Dojo HP: {dojo.TargetHP}\n");
+Console.WriteLine("Select a character:");
+Console.WriteLine($"1. {aoko.Name}");
+Console.WriteLine($"2. {arcuied.Name}\n");
+
+bool selectingCharacter = true;
+while (selectingCharacter)
+{
+    Console.Write("Choose a character: ");
+    string characterInput = Console.ReadLine()!;
+
+    if (!int.TryParse(characterInput, out int characterChoice))
+    {
+        logger.LogWarning("Invalid character input (non-numeric): {Input}", characterInput);
+        Console.WriteLine("That's not a number. Try again.\n");
+        continue;
+    }
+
+    logger.LogDebug("User selected character {Choice}", characterChoice);
+
+    if (characterChoice == 1)
+    {
+        selectedCharacter = aoko;
+        selectingCharacter = false;
+    }
+    else if (characterChoice == 2)
+    {
+        selectedCharacter = arcuied;
+        selectingCharacter = false;
+    }
+    else
+    {
+        logger.LogWarning("Choice out of range: {Choice}", characterChoice);
+        Console.WriteLine("Please choose 1 or 2.\n");
+    }
+}
+
+Console.WriteLine($"Welcome to the Taiga Dojo with {selectedCharacter.Name}!");
+Console.WriteLine($"Initial Mana: {selectedCharacter.Resources.Mana}, Dojo HP: {dojo.TargetHP}\n");
 
 bool isTraining = true;
 while (isTraining)
 {
-    Console.WriteLine("--- Aoko's Spells ---");
-    for (int i = 0; i < aoko.AvailableSpells.Count; i++)
+    Console.WriteLine($"--- {selectedCharacter.Name}'s Spells ---");
+    for (int i = 0; i < selectedCharacter.AvailableSpells.Count; i++)
     {
-        Spell spell = aoko.AvailableSpells[i];
+        Spell spell = selectedCharacter.AvailableSpells[i];
         Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {spell.ManaCost}, Damage: {spell.Damage})");
     }
-    int exitOption = aoko.AvailableSpells.Count + 1;
+    int exitOption = selectedCharacter.AvailableSpells.Count + 1;
     Console.WriteLine($"{exitOption}. Exit\n");
 
     Console.Write("Choose a spell: ");
@@ -63,7 +101,7 @@ while (isTraining)
 
     // Dispatch by index (scales with number of spells)
     int spellIndex = choice - 1; 
-    if (spellIndex < 0 || spellIndex >= aoko.AvailableSpells.Count)
+    if (spellIndex < 0 || spellIndex >= selectedCharacter.AvailableSpells.Count)
     {
         logger.LogWarning("Computed spell index out of range: {Index}", spellIndex);
         Console.WriteLine("Invalid spell selection. Try again.\n");
@@ -71,7 +109,7 @@ while (isTraining)
     }
 
     // Single exit flag controls loop
-    isTraining = HandleSpellCast(aoko, dojo, spellIndex);
+    isTraining = HandleSpellCast(selectedCharacter, dojo, spellIndex);
 
     if (dojo.TargetHP <= 0)
     {
@@ -89,7 +127,7 @@ static bool HandleSpellCast(Character character, TaigaDojo dojo, int spellIndex)
 
 static Character CreateAoko(ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
 {
-    var pool = new ResourcePool(500, resourceLogger);
+    var pool = new ResourcePool(200, resourceLogger);
     Character aoko = new Character("Aoko", pool, logger);
 
     Spell snapAndDraw = new Spell("Snap & Draw", manaCost: 20, new DamageEffect(5));
@@ -99,4 +137,18 @@ static Character CreateAoko(ILogger<Character> logger, ILogger<ResourcePool> res
     aoko.AvailableSpells.Add(snapAndDraw);
 
     return aoko;
+}
+
+static Character CreateArcueid(ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
+{
+    var pool = new ResourcePool(500, resourceLogger);
+    Character arcuied = new Character("Arcueid", pool, logger);
+
+    Spell mysticEyes = new Spell("Mystic Eyes of Enchantment", manaCost: 15, new VulnerableEffect());
+    Spell meltyBlood = new Spell("Melty Blood", manaCost: 20, new DamageEffect(25));
+
+    arcuied.AvailableSpells.Add(meltyBlood);
+    arcuied.AvailableSpells.Add(mysticEyes);
+
+    return arcuied;
 }
