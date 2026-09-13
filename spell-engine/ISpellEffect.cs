@@ -2,6 +2,6 @@ namespace NasuverseSpellEngine
 {
     public interface ISpellEffect
     {
-        void Apply(Character caster, TaigaDojo target);
+        SpellEffectResult Apply(Character caster, TaigaDojo target);
     }
 }
