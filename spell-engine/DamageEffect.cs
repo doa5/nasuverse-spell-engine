@@ -11,7 +11,7 @@ namespace NasuverseSpellEngine
 
         public void Apply(Character caster, TaigaDojo target)
         {
-            target.TargetHP -= Damage;
+            target.TakeDamage(Damage);
         }
     }
 }

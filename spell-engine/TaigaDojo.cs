@@ -5,6 +5,7 @@ namespace NasuverseSpellEngine
     public class TaigaDojo
     {
         private int _targetHP;
+        private bool _isVulnerable;
         private readonly ILogger<TaigaDojo> _logger;
 
         public int TargetHP
@@ -27,6 +28,33 @@ namespace NasuverseSpellEngine
         {
             _logger = logger;
             TargetHP = initialHP;
+        }
+
+        public void ApplyVulnerability()
+        {
+            if (_isVulnerable)
+            {
+                _logger.LogInformation("TaigaDojo is already vulnerable");
+                return;
+            }
+
+            _isVulnerable = true;
+            _logger.LogInformation("TaigaDojo is now vulnerable to the next attack");
+        }
+
+        public void TakeDamage(int damage)
+        {
+            int multiplier = _isVulnerable ? 2 : 1;
+            int appliedDamage = damage * multiplier;
+            _isVulnerable = false;
+
+            _logger.LogInformation("TaigaDojo took {Damage} base damage x{Multiplier} = {AppliedDamage}", damage, multiplier, appliedDamage);
+            if (multiplier > 1)
+            {
+                _logger.LogInformation("TaigaDojo vulnerability consumed");
+            }
+
+            TargetHP -= appliedDamage;
         }
     }
 }
