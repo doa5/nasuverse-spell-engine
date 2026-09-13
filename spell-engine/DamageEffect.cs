@@ -9,9 +9,10 @@ namespace NasuverseSpellEngine
             Damage = damage;
         }
 
-        public void Apply(Character caster, TaigaDojo target)
+        public SpellEffectResult Apply(Character caster, TaigaDojo target)
         {
-            target.TakeDamage(Damage);
+            int appliedDamage = target.TakeDamage(Damage);
+            return new SpellEffectResult(true, $"Dealt {appliedDamage} damage.", appliedDamage);
         }
     }
 }
