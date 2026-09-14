@@ -12,7 +12,7 @@ namespace NasuverseSpellEngine
         public SpellEffectResult Apply(Character caster, TaigaDojo target)
         {
             int appliedDamage = target.TakeDamage(Damage);
-            return new SpellEffectResult(true, $"Dealt {appliedDamage} damage.", appliedDamage);
+            return new SpellEffectResult($"Dealt {appliedDamage} damage.", appliedDamage);
         }
     }
 }
