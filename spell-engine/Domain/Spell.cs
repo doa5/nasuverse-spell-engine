@@ -1,4 +1,6 @@
-namespace NasuverseSpellEngine
+using NasuverseSpellEngine.Domain.Effects;
+
+namespace NasuverseSpellEngine.Domain
 {
     public class Spell
     {

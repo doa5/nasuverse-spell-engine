@@ -1,4 +1,6 @@
-namespace NasuverseSpellEngine
+using NasuverseSpellEngine.Domain;
+
+namespace NasuverseSpellEngine.Domain.Effects
 {
     public interface ISpellEffect
     {
