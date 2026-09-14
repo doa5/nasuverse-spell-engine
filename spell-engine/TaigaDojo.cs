@@ -42,7 +42,7 @@ namespace NasuverseSpellEngine
             _logger.LogInformation("TaigaDojo is now vulnerable to the next attack");
         }
 
-        public void TakeDamage(int damage)
+        public int TakeDamage(int damage)
         {
             int multiplier = _isVulnerable ? 2 : 1;
             int appliedDamage = damage * multiplier;
@@ -55,6 +55,7 @@ namespace NasuverseSpellEngine
             }
 
             TargetHP -= appliedDamage;
+            return appliedDamage;
         }
     }
 }
