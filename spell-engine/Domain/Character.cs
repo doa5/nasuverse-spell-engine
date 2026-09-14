@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
+using NasuverseSpellEngine.Domain.Effects;
 
-namespace NasuverseSpellEngine
+namespace NasuverseSpellEngine.Domain
 {
     public class Character
     {
@@ -33,7 +34,7 @@ namespace NasuverseSpellEngine
                 }
 
                 int totalDamageDealt = effectResults.Sum(result => result.DamageDealt);
-                string effectSummary = string.Join(" ", 
+                string effectSummary = string.Join(" ",
                     effectResults
                     .Select(result => result.Message)
                     .Where(message => !string.IsNullOrWhiteSpace(message)));
