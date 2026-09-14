@@ -23,6 +23,7 @@ while (selectingCharacter)
 {
     Console.Write("Choose a character: ");
     string characterInput = Console.ReadLine()!;
+    Console.Write("\n");
 
     if (!int.TryParse(characterInput, out int characterChoice))
     {
@@ -67,6 +68,7 @@ while (isTraining)
 
     Console.Write("Choose a spell: ");
     string input = Console.ReadLine()!; // ! means "trust me, it's not null"
+    Console.Write("\n");
 
     if (!int.TryParse(input, out int choice))
     {
