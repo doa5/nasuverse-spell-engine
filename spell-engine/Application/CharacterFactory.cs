@@ -6,43 +6,30 @@ namespace NasuverseSpellEngine.Application
 {
     public static class CharacterFactory
     {
-        private const int AokoStartingMana = 200;
-        private const int SnapAndDrawManaCost = 20;
-        private const int SnapAndDrawDamage = 5;
-        private const int EarthlightStarbowManaCost = 50;
-        private const int EarthlightStarbowDamage = 35;
-
-        private const int ArcueidStartingMana = 500;
-        private const int MysticEyesManaCost = 15;
-        private const int MeltyBloodManaCost = 20;
-        private const int MeltyBloodDamage = 25;
-
-        public static Character CreateAoko(ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
+        public static Character Create(CharacterDefinition definition, ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
         {
-            var pool = new ResourcePool(AokoStartingMana, resourceLogger);
-            Character aoko = new Character("Aoko", pool, logger);
+            var pool = new ResourcePool(definition.StartingMana, resourceLogger);
+            Character character = new Character(definition.Name, pool, logger);
 
-            Spell snapAndDraw = new Spell("Snap & Draw", manaCost: SnapAndDrawManaCost, new DamageEffect(SnapAndDrawDamage));
-            Spell earthlightStarbow = new Spell("Earthlight Starbow", manaCost: EarthlightStarbowManaCost, new DamageEffect(EarthlightStarbowDamage));
+            foreach (SpellDefinition spellDefinition in definition.Spells)
+            {
+                character.AvailableSpells.Add(CreateSpell(spellDefinition));
+            }
 
-            aoko.AvailableSpells.Add(earthlightStarbow);
-            aoko.AvailableSpells.Add(snapAndDraw);
-
-            return aoko;
+            return character;
         }
 
-        public static Character CreateArcueid(ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
+        private static Spell CreateSpell(SpellDefinition definition)
         {
-            var pool = new ResourcePool(ArcueidStartingMana, resourceLogger);
-            Character arcueid = new Character("Arcueid", pool, logger);
-
-            Spell mysticEyes = new Spell("Mystic Eyes of Enchantment", manaCost: MysticEyesManaCost, new VulnerableEffect());
-            Spell meltyBlood = new Spell("Melty Blood", manaCost: MeltyBloodManaCost, new DamageEffect(MeltyBloodDamage));
-
-            arcueid.AvailableSpells.Add(meltyBlood);
-            arcueid.AvailableSpells.Add(mysticEyes);
-
-            return arcueid;
+            ISpellEffect effect = CreateEffect(definition.Effect);
+            return new Spell(definition.Name, definition.ManaCost, effect);
         }
+
+        private static ISpellEffect CreateEffect(EffectDefinition definition) => definition.Type switch
+        {
+            EffectType.Damage => new DamageEffect(definition.Amount),
+            EffectType.Vulnerable => new VulnerableEffect(),
+            _ => throw new ArgumentOutOfRangeException(nameof(definition), definition.Type, "Unknown effect type"),
+        };
     }
 }
