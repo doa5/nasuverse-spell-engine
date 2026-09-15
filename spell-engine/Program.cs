@@ -14,8 +14,8 @@ const int DojoStartingHP = 100;
 logger.LogInformation("Starting Taiga Dojo sandbox");
 
 TaigaDojo dojo = new TaigaDojo(DojoStartingHP, dojoLogger);
-Character aoko = CharacterFactory.CreateAoko(charLogger, resourceLogger);
-Character arcueid = CharacterFactory.CreateArcueid(charLogger, resourceLogger);
+Character aoko = CharacterFactory.Create(CharacterCatalog.Aoko, charLogger, resourceLogger);
+Character arcueid = CharacterFactory.Create(CharacterCatalog.Arcueid, charLogger, resourceLogger);
 
 TrainingSession session = new TrainingSession(sessionLogger);
 Character selectedCharacter = session.SelectCharacter(aoko, arcueid);
