@@ -55,32 +55,10 @@ namespace NasuverseSpellEngine.Application
             bool isTraining = true;
             while (isTraining)
             {
-                Console.WriteLine($"--- {selectedCharacter.Name}'s Spells ---");
-                for (int i = 0; i < selectedCharacter.AvailableSpells.Count; i++)
+                int exitOption = DisplaySpellMenu(selectedCharacter);
+
+                if (!TryReadSpellChoice(exitOption, out int choice))
                 {
-                    Spell spell = selectedCharacter.AvailableSpells[i];
-                    Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {spell.ManaCost}, Damage: {spell.Damage})");
-                }
-                int exitOption = selectedCharacter.AvailableSpells.Count + 1;
-                Console.WriteLine($"{exitOption}. Exit\n");
-
-                Console.Write("Choose a spell: ");
-                string input = Console.ReadLine()!; // ! means "trust me, it's not null"
-                Console.Write("\n");
-
-                if (!int.TryParse(input, out int choice))
-                {
-                    _logger.LogWarning("Invalid input (non-numeric): {Input}", input);
-                    Console.WriteLine("That's not a number. Try again.\n");
-                    continue;
-                }
-
-                _logger.LogDebug("User selected {Choice}", choice);
-
-                if (choice < 1 || choice > exitOption)
-                {
-                    _logger.LogWarning("Choice out of range: {Choice}", choice);
-                    Console.WriteLine("Invalid choice. Try again.\n");
                     continue;
                 }
 
@@ -115,6 +93,45 @@ namespace NasuverseSpellEngine.Application
                     Console.WriteLine("The Taiga Dojo has been destroyed!\n");
                 }
             }
+        }
+
+        private static int DisplaySpellMenu(Character character)
+        {
+            Console.WriteLine($"--- {character.Name}'s Spells ---");
+            for (int i = 0; i < character.AvailableSpells.Count; i++)
+            {
+                Spell spell = character.AvailableSpells[i];
+                Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {spell.ManaCost}, Damage: {spell.Damage})");
+            }
+
+            int exitOption = character.AvailableSpells.Count + 1;
+            Console.WriteLine($"{exitOption}. Exit\n");
+            return exitOption;
+        }
+
+        private bool TryReadSpellChoice(int exitOption, out int choice)
+        {
+            Console.Write("Choose a spell: ");
+            string input = Console.ReadLine()!; // ! means "trust me, it's not null"
+            Console.Write("\n");
+
+            if (!int.TryParse(input, out choice))
+            {
+                _logger.LogWarning("Invalid input (non-numeric): {Input}", input);
+                Console.WriteLine("That's not a number. Try again.\n");
+                return false;
+            }
+
+            _logger.LogDebug("User selected {Choice}", choice);
+
+            if (choice < 1 || choice > exitOption)
+            {
+                _logger.LogWarning("Choice out of range: {Choice}", choice);
+                Console.WriteLine("Invalid choice. Try again.\n");
+                return false;
+            }
+
+            return true;
         }
 
         private static void HandleSpellCast(Character character, TaigaDojo dojo, int spellIndex)
