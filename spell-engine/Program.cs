@@ -1,13 +1,18 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NasuverseSpellEngine.Application;
 using NasuverseSpellEngine.Domain;
 
-using var loggerFactory = LoggerFactory.Create(builder => builder.AddDebug().SetMinimumLevel(LogLevel.Debug));
-ILogger logger = loggerFactory.CreateLogger<Program>();
-ILogger<Character> charLogger = loggerFactory.CreateLogger<Character>();
-ILogger<ResourcePool> resourceLogger = loggerFactory.CreateLogger<ResourcePool>();
-ILogger<TaigaDojo> dojoLogger = loggerFactory.CreateLogger<TaigaDojo>();
-ILogger<TrainingSession> sessionLogger = loggerFactory.CreateLogger<TrainingSession>();
+var services = new ServiceCollection();
+services.AddLogging(builder => builder.AddDebug().SetMinimumLevel(LogLevel.Debug));
+services.AddSingleton<TrainingSession>();
+
+using ServiceProvider provider = services.BuildServiceProvider();
+
+ILogger logger = provider.GetRequiredService<ILogger<Program>>();
+ILogger<Character> charLogger = provider.GetRequiredService<ILogger<Character>>();
+ILogger<ResourcePool> resourceLogger = provider.GetRequiredService<ILogger<ResourcePool>>();
+ILogger<TaigaDojo> dojoLogger = provider.GetRequiredService<ILogger<TaigaDojo>>();
 
 const int DojoStartingHP = 100;
 
@@ -17,6 +22,6 @@ TaigaDojo dojo = new TaigaDojo(DojoStartingHP, dojoLogger);
 Character aoko = CharacterFactory.Create(CharacterCatalog.Aoko, charLogger, resourceLogger);
 Character arcueid = CharacterFactory.Create(CharacterCatalog.Arcueid, charLogger, resourceLogger);
 
-TrainingSession session = new TrainingSession(sessionLogger);
+TrainingSession session = provider.GetRequiredService<TrainingSession>();
 Character selectedCharacter = session.SelectCharacter(aoko, arcueid);
 session.Run(selectedCharacter, dojo);
