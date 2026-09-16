@@ -136,9 +136,26 @@ namespace NasuverseSpellEngine.Application
 
         private static void HandleSpellCast(Character character, TaigaDojo dojo, int spellIndex)
         {
-            string result = character.CastSpell(character.AvailableSpells[spellIndex], dojo);
-            Console.WriteLine(result);
+            CastSpellResult result = character.CastSpell(character.AvailableSpells[spellIndex], dojo);
+            Console.WriteLine(FormatCastResult(result));
             Console.WriteLine($"{character.Name}'s Mana: {character.Resources.Mana}, Dojo HP: {dojo.TargetHP}\n");
+        }
+
+        private static string FormatCastResult(CastSpellResult result)
+        {
+            if (!result.Success)
+            {
+                return $"{result.Caster.Name} tried to cast {result.Spell.Name} but couldn't afford the mana cost.";
+            }
+
+            string effectSummary = string.Join(" ",
+                result.EffectResults
+                .Select(effect => effect.Message)
+                .Where(message => !string.IsNullOrWhiteSpace(message)));
+
+            return string.IsNullOrWhiteSpace(effectSummary)
+                ? $"{result.Caster.Name} cast {result.Spell.Name}!"
+                : $"{result.Caster.Name} cast {result.Spell.Name}! {effectSummary}";
         }
     }
 }
