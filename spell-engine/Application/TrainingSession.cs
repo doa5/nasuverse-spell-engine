@@ -7,7 +7,7 @@ namespace NasuverseSpellEngine.Application
     {
         private readonly ILogger _logger;
 
-        public TrainingSession(ILogger logger)
+        public TrainingSession(ILogger<TrainingSession> logger)
         {
             _logger = logger;
         }
