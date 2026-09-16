@@ -1,4 +1,4 @@
-namespace NasuverseSpellEngine
+namespace NasuverseSpellEngine.Domain
 {
     public record SpellEffectResult(
         string Message,

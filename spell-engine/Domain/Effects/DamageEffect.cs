@@ -1,4 +1,4 @@
-namespace NasuverseSpellEngine
+namespace NasuverseSpellEngine.Domain.Effects
 {
     public class DamageEffect : ISpellEffect
     {

@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
+using NasuverseSpellEngine.Domain.Effects;
 
-namespace NasuverseSpellEngine
+namespace NasuverseSpellEngine.Domain
 {
     public class Character
     {
@@ -18,7 +19,7 @@ namespace NasuverseSpellEngine
             _logger = logger;
         }
 
-        public string CastSpell(Spell spell, TaigaDojo dojo)
+        public CastSpellResult CastSpell(Spell spell, TaigaDojo dojo)
         {
             _logger.LogDebug("{Character} attempts to cast {Spell} (cost {Cost}), current mana {Mana}", Name, spell.Name, spell.ManaCost, Resources.Mana);
 
@@ -33,20 +34,14 @@ namespace NasuverseSpellEngine
                 }
 
                 int totalDamageDealt = effectResults.Sum(result => result.DamageDealt);
-                string effectSummary = string.Join(" ", 
-                    effectResults
-                    .Select(result => result.Message)
-                    .Where(message => !string.IsNullOrWhiteSpace(message)));
 
                 _logger.LogInformation("{Character} successfully cast {Spell} with {EffectCount} effect(s) (DojoHP {Old} -> {New}, Damage {Damage}). Remaining mana: {Mana}", Name, spell.Name, spell.Effects.Count, oldHp, dojo.TargetHP, totalDamageDealt, Resources.Mana);
 
-                return string.IsNullOrWhiteSpace(effectSummary)
-                    ? $"{Name} cast {spell.Name}!"
-                    : $"{Name} cast {spell.Name}! {effectSummary}";
+                return new CastSpellResult(Success: true, Caster: this, Spell: spell, EffectResults: effectResults);
             }
 
             _logger.LogWarning("{Character} failed to cast {Spell}: insufficient mana (has {Mana}, needs {Cost})", Name, spell.Name, Resources.Mana, spell.ManaCost);
-            return $"{Name} tried to cast {spell.Name} but couldn't afford the mana cost.";
+            return new CastSpellResult(Success: false, Caster: this, Spell: spell, EffectResults: []);
         }
     }
 }
