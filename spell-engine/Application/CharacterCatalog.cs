@@ -16,13 +16,14 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Snap & Draw", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 5)),
             ]);
 
-        public static readonly CharacterDefinition Arcueid = new(
-            Name: "Arcueid",
-            StartingMana: 500,
-            Spells:
-            [
-                new SpellDefinition("Melty Blood", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 25)),
+    public static readonly CharacterDefinition Arcueid = new(
+        Name: "Arcueid",
+        StartingMana: 500,
+        Spells:
+        [
                 new SpellDefinition("Mystic Eyes of Enchantment", ManaCost: 15, new EffectDefinition(EffectType.Vulnerable)),
-            ]);
+                new SpellDefinition("Melty Blood", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 25)),
+                new SpellDefinition("Marble Phantasm - Seal", ManaCost: 500, new EffectDefinition(EffectType.Damage, Amount: 200)),
+        ]);
     }
 }
