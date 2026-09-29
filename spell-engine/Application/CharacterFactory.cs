@@ -39,6 +39,9 @@ namespace NasuverseSpellEngine.Application
         private static ISpellEffect CreateEffect(EffectDefinition definition) => definition.Type switch
         {
             EffectType.Damage => new DamageEffect(definition.Amount),
+            EffectType.Entropy => new EntropyEffect(definition.Amount),
+            EffectType.Texture => new TextureEffect(),
+            EffectType.AtmosphericBurst => new AtmosphericBurstEffect(),
             _ => throw new ArgumentOutOfRangeException(nameof(definition), definition.Type, "Unknown effect type"),
         };
     }

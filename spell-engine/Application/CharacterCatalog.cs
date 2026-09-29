@@ -38,6 +38,9 @@ namespace NasuverseSpellEngine.Application
             new SpellDefinition("Pinprick", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 1)),
             new SpellDefinition("Half Shatter", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 500)),
             new SpellDefinition("Obliterate", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 9999)),
+            new SpellDefinition("Debug Entropy Surge", ManaCost: 0, new EffectDefinition(EffectType.Entropy, Amount: 25)),
+            new SpellDefinition("Debug Texture Shift", ManaCost: 0, new EffectDefinition(EffectType.Texture)),
+            new SpellDefinition("Debug Mana Saturate", ManaCost: 0, new EffectDefinition(EffectType.AtmosphericBurst)),
         ]);
 
         /// <summary>
