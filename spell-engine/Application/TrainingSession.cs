@@ -78,7 +78,7 @@ namespace NasuverseSpellEngine.Application
                 if (world.Durability <= 0)
                 {
                     _logger.LogInformation("Attempt to cast on destroyed dojo (Durability {Durability})", world.Durability);
-                    Console.WriteLine("Taiga: The dojo has already been destroyed! What are you doing??\n");
+                    lastAction = "Taiga: The dojo has already been destroyed! What are you doing??";
                     continue;
                 }
 
@@ -87,16 +87,16 @@ namespace NasuverseSpellEngine.Application
                 if (spellIndex < 0 || spellIndex >= selectedCharacter.AvailableSpells.Count)
                 {
                     _logger.LogWarning("Computed spell index out of range: {Index}", spellIndex);
-                    Console.WriteLine("Invalid spell selection. Try again.\n");
+                    lastAction = "Invalid spell selection. Try again.";
                     continue;
                 }
 
-                HandleSpellCast(selectedCharacter, world, spellIndex);
+                lastAction = HandleSpellCast(selectedCharacter, world, spellIndex);
                 world.AdvanceTurn();
 
                 if (world.Durability <= 0)
                 {
-                    Console.WriteLine("The Taiga Dojo has been destroyed!\n");
+                    lastAction += " The Taiga Dojo has been destroyed!";
                 }
             }
         }
@@ -126,12 +126,10 @@ namespace NasuverseSpellEngine.Application
             return true;
         }
 
-        private static void HandleSpellCast(Character character, WorldState world, int spellIndex)
+        private static string HandleSpellCast(Character character, WorldState world, int spellIndex)
         {
             CastSpellResult result = character.CastSpell(character.AvailableSpells[spellIndex], world);
-            Console.WriteLine(FormatCastResult(result));
-            Console.WriteLine($"{character.Name}'s Mana: {character.Resources.Mana}, Dojo Durability: {world.Durability}");
-            Console.WriteLine($"{TaigaCommentary.GetLine(world)}\n");
+            return FormatCastResult(result);
         }
 
         private static string FormatCastResult(CastSpellResult result)
