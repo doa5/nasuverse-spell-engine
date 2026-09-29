@@ -16,13 +16,19 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Snap & Draw", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 5)),
             ]);
 
+    /// <summary>
+    /// True Ancestor and last remaining Brunestud. Marble Phantasm - Seal overwrites the
+    /// room's reality texture into the Millennial Castle, under which her own attacks
+    /// deal double damage; Melty Blood is her true-form finisher.
+    /// </summary>
     public static readonly CharacterDefinition Arcueid = new(
         Name: "Arcueid",
         StartingMana: 500,
         Spells:
         [
-                new SpellDefinition("Melty Blood", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 25)),
+                new SpellDefinition("Out of my Way!", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 35)),
                 new SpellDefinition("Marble Phantasm - Seal", ManaCost: 150, new EffectDefinition(EffectType.Texture)),
+                new SpellDefinition("Melty Blood", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 140)),
         ]);
 
     /// <summary>
