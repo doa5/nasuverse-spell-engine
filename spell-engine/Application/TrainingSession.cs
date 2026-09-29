@@ -13,11 +13,12 @@ namespace NasuverseSpellEngine.Application
             _logger = logger;
         }
 
-        public Character SelectCharacter(Character aoko, Character arcueid)
+        public Character SelectCharacter(Character aoko, Character arcueid, Character debug)
         {
             Console.WriteLine("Select a character:");
             Console.WriteLine($"1. {aoko.Name}");
-            Console.WriteLine($"2. {arcueid.Name}\n");
+            Console.WriteLine($"2. {arcueid.Name}");
+            Console.WriteLine($"3. {debug.Name} (testing)\n");
 
             while (true)
             {
@@ -42,9 +43,13 @@ namespace NasuverseSpellEngine.Application
                 {
                     return arcueid;
                 }
+                else if (characterChoice == 3)
+                {
+                    return debug;
+                }
 
                 _logger.LogWarning("Choice out of range: {Choice}", characterChoice);
-                Console.WriteLine("Please choose 1 or 2.\n");
+                Console.WriteLine("Please choose 1, 2, or 3.\n");
             }
         }
 

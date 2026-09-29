@@ -24,5 +24,20 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Melty Blood", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 25)),
                 new SpellDefinition("Marble Phantasm - Seal", ManaCost: 500, new EffectDefinition(EffectType.Damage, Amount: 200)),
         ]);
+
+    /// <summary>
+    /// Debug-only character with simple, predictable spells for manually smoke-testing
+    /// world-state thresholds (durability bands, destruction, etc.) without needing
+    /// dozens of real casts.
+    /// </summary>
+    public static readonly CharacterDefinition Debug = new(
+        Name: "Debug",
+        StartingMana: 99999,
+        Spells:
+        [
+            new SpellDefinition("Pinprick", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 1)),
+            new SpellDefinition("Half Shatter", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 500)),
+            new SpellDefinition("Obliterate", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 9999)),
+        ]);
     }
 }

@@ -19,7 +19,8 @@ logger.LogInformation("Starting Taiga Dojo sandbox");
 WorldState world = new WorldState();
 Character aoko = CharacterFactory.Create(CharacterCatalog.Aoko, charLogger, resourceLogger);
 Character arcueid = CharacterFactory.Create(CharacterCatalog.Arcueid, charLogger, resourceLogger);
+Character debug = CharacterFactory.Create(CharacterCatalog.Debug, charLogger, resourceLogger);
 
 TrainingSession session = provider.GetRequiredService<TrainingSession>();
-Character selectedCharacter = session.SelectCharacter(aoko, arcueid);
+Character selectedCharacter = session.SelectCharacter(aoko, arcueid, debug);
 session.Run(selectedCharacter, world);
