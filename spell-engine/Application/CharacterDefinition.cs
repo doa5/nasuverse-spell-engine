@@ -6,8 +6,7 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public enum EffectType
     {
-        Damage,
-        Vulnerable
+        Damage
     }
 
     /// <summary>Plain data describing one spell effect (no behavior, no Domain dependency).</summary>

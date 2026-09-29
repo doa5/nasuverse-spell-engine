@@ -21,7 +21,6 @@ namespace NasuverseSpellEngine.Application
         StartingMana: 500,
         Spells:
         [
-                new SpellDefinition("Mystic Eyes of Enchantment", ManaCost: 15, new EffectDefinition(EffectType.Vulnerable)),
                 new SpellDefinition("Melty Blood", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 25)),
                 new SpellDefinition("Marble Phantasm - Seal", ManaCost: 500, new EffectDefinition(EffectType.Damage, Amount: 200)),
         ]);
