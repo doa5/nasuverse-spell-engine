@@ -60,9 +60,7 @@ namespace NasuverseSpellEngine.Application
 
             while (isTraining)
             {
-                DashboardRenderer.Render(new DashboardView(selectedCharacter, world, lastAction));
-
-                int exitOption = DisplaySpellMenu(selectedCharacter);
+                int exitOption = DashboardRenderer.Render(new DashboardView(selectedCharacter, world, lastAction));
 
                 if (!TryReadSpellChoice(exitOption, out int choice))
                 {
@@ -101,20 +99,6 @@ namespace NasuverseSpellEngine.Application
                     Console.WriteLine("The Taiga Dojo has been destroyed!\n");
                 }
             }
-        }
-
-        private static int DisplaySpellMenu(Character character)
-        {
-            Console.WriteLine($"--- {character.Name}'s Spells ---");
-            for (int i = 0; i < character.AvailableSpells.Count; i++)
-            {
-                Spell spell = character.AvailableSpells[i];
-                Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {spell.ManaCost}, Damage: {spell.Damage})");
-            }
-
-            int exitOption = character.AvailableSpells.Count + 1;
-            Console.WriteLine($"{exitOption}. Exit\n");
-            return exitOption;
         }
 
         private bool TryReadSpellChoice(int exitOption, out int choice)
