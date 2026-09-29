@@ -47,7 +47,7 @@ namespace NasuverseSpellEngine.Domain.World
 
             Durability -= actualDamage;
 
-            PushEvent($"Dojo took {actualDamage} damage (Durability: {Durability})");
+            PushEvent($"Dojo took {actualDamage} damage.");
             return actualDamage;
         }
 
