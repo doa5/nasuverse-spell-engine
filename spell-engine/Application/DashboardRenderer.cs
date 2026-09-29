@@ -12,12 +12,7 @@ namespace NasuverseSpellEngine.Application
     {
         public static (int SwitchOption, int ExitOption) Render(DashboardView view)
         {
-            // Console.Clear() throws IOException when output isn't attached to a real
-            // console (e.g. piped/redirected input, some test runners). Skip it in that case.
-            if (!Console.IsOutputRedirected)
-            {
-                Console.Clear();
-            }
+            ClearConsole();
 
             WriteWorldStatus(view.World);
             WriteCharacterStatus(view.ActiveCharacter);
@@ -27,6 +22,34 @@ namespace NasuverseSpellEngine.Application
             WriteTaigaLine(view.World);
 
             return (switchOption, exitOption);
+        }
+
+        /// <summary>
+        /// Clears the screen and draws only the character selection list — used both
+        /// for the initial character pick and for the in-session "Switch Character"
+        /// option, so it fully replaces the dashboard rather than appending below it.
+        /// </summary>
+        public static void RenderCharacterSelect(IReadOnlyList<Character> roster)
+        {
+            ClearConsole();
+
+            Console.WriteLine("Select a character:");
+            for (int i = 0; i < roster.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {roster[i].Name}");
+            }
+
+            Console.WriteLine();
+        }
+
+        private static void ClearConsole()
+        {
+            // Console.Clear() throws IOException when output isn't attached to a real
+            // console (e.g. piped/redirected input, some test runners). Skip it in that case.
+            if (!Console.IsOutputRedirected)
+            {
+                Console.Clear();
+            }
         }
 
         private static void WriteWorldStatus(WorldState world)

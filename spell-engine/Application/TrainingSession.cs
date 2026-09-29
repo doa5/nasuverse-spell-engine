@@ -15,12 +15,7 @@ namespace NasuverseSpellEngine.Application
 
         public Character SelectCharacter(IReadOnlyList<Character> roster)
         {
-            Console.WriteLine("Select a character:");
-            for (int i = 0; i < roster.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {roster[i].Name}");
-            }
-            Console.WriteLine();
+            DashboardRenderer.RenderCharacterSelect(roster);
 
             while (true)
             {
