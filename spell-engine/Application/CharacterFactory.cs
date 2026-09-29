@@ -19,6 +19,17 @@ namespace NasuverseSpellEngine.Application
             return character;
         }
 
+        /// <summary>
+        /// Builds a <see cref="Character"/> for every definition in <paramref name="roster"/>,
+        /// preserving order (e.g. <see cref="CharacterCatalog.Roster"/>).
+        /// </summary>
+        public static IReadOnlyList<Character> CreateRoster(IReadOnlyList<CharacterDefinition> roster, ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
+        {
+            return roster
+                .Select(definition => Create(definition, logger, resourceLogger))
+                .ToList();
+        }
+
         private static Spell CreateSpell(SpellDefinition definition)
         {
             ISpellEffect effect = CreateEffect(definition.Effect);
