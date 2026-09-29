@@ -17,9 +17,7 @@ ILogger<ResourcePool> resourceLogger = provider.GetRequiredService<ILogger<Resou
 logger.LogInformation("Starting Taiga Dojo sandbox");
 
 WorldState world = new WorldState();
-Character aoko = CharacterFactory.Create(CharacterCatalog.Aoko, charLogger, resourceLogger);
-Character arcueid = CharacterFactory.Create(CharacterCatalog.Arcueid, charLogger, resourceLogger);
-Character debug = CharacterFactory.Create(CharacterCatalog.Debug, charLogger, resourceLogger);
+IReadOnlyList<Character> roster = CharacterFactory.CreateRoster(CharacterCatalog.Roster, charLogger, resourceLogger);
 
 TrainingSession session = provider.GetRequiredService<TrainingSession>();
-session.Run(aoko, arcueid, debug, world);
+session.Run(roster, world);

@@ -13,12 +13,14 @@ namespace NasuverseSpellEngine.Application
             _logger = logger;
         }
 
-        public Character SelectCharacter(Character aoko, Character arcueid, Character debug)
+        public Character SelectCharacter(IReadOnlyList<Character> roster)
         {
             Console.WriteLine("Select a character:");
-            Console.WriteLine($"1. {aoko.Name}");
-            Console.WriteLine($"2. {arcueid.Name}");
-            Console.WriteLine($"3. {debug.Name} (testing)\n");
+            for (int i = 0; i < roster.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {roster[i].Name}");
+            }
+            Console.WriteLine();
 
             while (true)
             {
@@ -35,27 +37,20 @@ namespace NasuverseSpellEngine.Application
 
                 _logger.LogDebug("User selected character {Choice}", characterChoice);
 
-                if (characterChoice == 1)
+                int index = characterChoice - 1;
+                if (index >= 0 && index < roster.Count)
                 {
-                    return aoko;
-                }
-                else if (characterChoice == 2)
-                {
-                    return arcueid;
-                }
-                else if (characterChoice == 3)
-                {
-                    return debug;
+                    return roster[index];
                 }
 
                 _logger.LogWarning("Choice out of range: {Choice}", characterChoice);
-                Console.WriteLine("Please choose 1, 2, or 3.\n");
+                Console.WriteLine($"Please choose a number between 1 and {roster.Count}.\n");
             }
         }
 
-        public void Run(Character aoko, Character arcueid, Character debug, WorldState world)
+        public void Run(IReadOnlyList<Character> roster, WorldState world)
         {
-            Character activeCharacter = SelectCharacter(aoko, arcueid, debug);
+            Character activeCharacter = SelectCharacter(roster);
             string? lastAction = null;
             bool isTraining = true;
 
@@ -79,7 +74,7 @@ namespace NasuverseSpellEngine.Application
                 if (choice == switchOption)
                 {
                     _logger.LogInformation("User selected Switch Character");
-                    activeCharacter = SelectCharacter(aoko, arcueid, debug);
+                    activeCharacter = SelectCharacter(roster);
                     lastAction = $"Switched to {activeCharacter.Name}.";
                     continue;
                 }
