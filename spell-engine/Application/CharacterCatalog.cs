@@ -22,7 +22,22 @@ namespace NasuverseSpellEngine.Application
         Spells:
         [
                 new SpellDefinition("Melty Blood", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 25)),
-                new SpellDefinition("Marble Phantasm - Seal", ManaCost: 500, new EffectDefinition(EffectType.Damage, Amount: 200)),
+                new SpellDefinition("Marble Phantasm - Seal", ManaCost: 150, new EffectDefinition(EffectType.Texture)),
+        ]);
+
+    /// <summary>
+    /// King of Knights. Standard attack (Invisible Air) is an unseen wind-blade strike;
+    /// Mana Burst saturates the atmosphere with dense dragon mana ahead of her Noble
+    /// Phantasm; Excalibur is her NP-tier finisher.
+    /// </summary>
+    public static readonly CharacterDefinition Saber = new(
+        Name: "Saber",
+        StartingMana: 350,
+        Spells:
+        [
+                new SpellDefinition("Invisible Air", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 40)),
+                new SpellDefinition("Mana Burst", ManaCost: 30, new EffectDefinition(EffectType.AtmosphericBurst)),
+                new SpellDefinition("Excalibur", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 130)),
         ]);
 
     /// <summary>
@@ -52,6 +67,7 @@ namespace NasuverseSpellEngine.Application
         [
             Aoko,
             Arcueid,
+            Saber,
             Debug,
         ];
     }
