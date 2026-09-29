@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using NasuverseSpellEngine.Domain;
+using NasuverseSpellEngine.Domain.World;
 
 namespace NasuverseSpellEngine.Application
 {
@@ -47,10 +48,10 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        public void Run(Character selectedCharacter, TaigaDojo dojo)
+        public void Run(Character selectedCharacter, WorldState world)
         {
             Console.WriteLine($"Welcome to the Taiga Dojo with {selectedCharacter.Name}!");
-            Console.WriteLine($"Initial Mana: {selectedCharacter.Resources.Mana}, Dojo HP: {dojo.TargetHP}\n");
+            Console.WriteLine($"Initial Mana: {selectedCharacter.Resources.Mana}, Dojo Durability: {world.Durability}\n");
 
             bool isTraining = true;
             while (isTraining)
@@ -70,9 +71,9 @@ namespace NasuverseSpellEngine.Application
                     continue;
                 }
 
-                if (dojo.TargetHP <= 0)
+                if (world.Durability <= 0)
                 {
-                    _logger.LogInformation("Attempt to cast on destroyed dojo (HP {HP})", dojo.TargetHP);
+                    _logger.LogInformation("Attempt to cast on destroyed dojo (Durability {Durability})", world.Durability);
                     Console.WriteLine("Taiga: The dojo has already been destroyed! What are you doing??\n");
                     continue;
                 }
@@ -86,9 +87,10 @@ namespace NasuverseSpellEngine.Application
                     continue;
                 }
 
-                HandleSpellCast(selectedCharacter, dojo, spellIndex);
+                HandleSpellCast(selectedCharacter, world, spellIndex);
+                world.AdvanceTurn();
 
-                if (dojo.TargetHP <= 0)
+                if (world.Durability <= 0)
                 {
                     Console.WriteLine("The Taiga Dojo has been destroyed!\n");
                 }
@@ -134,11 +136,11 @@ namespace NasuverseSpellEngine.Application
             return true;
         }
 
-        private static void HandleSpellCast(Character character, TaigaDojo dojo, int spellIndex)
+        private static void HandleSpellCast(Character character, WorldState world, int spellIndex)
         {
-            CastSpellResult result = character.CastSpell(character.AvailableSpells[spellIndex], dojo);
+            CastSpellResult result = character.CastSpell(character.AvailableSpells[spellIndex], world);
             Console.WriteLine(FormatCastResult(result));
-            Console.WriteLine($"{character.Name}'s Mana: {character.Resources.Mana}, Dojo HP: {dojo.TargetHP}\n");
+            Console.WriteLine($"{character.Name}'s Mana: {character.Resources.Mana}, Dojo Durability: {world.Durability}\n");
         }
 
         private static string FormatCastResult(CastSpellResult result)

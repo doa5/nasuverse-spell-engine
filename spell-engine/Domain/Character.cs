@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using NasuverseSpellEngine.Domain.Effects;
+using NasuverseSpellEngine.Domain.World;
 
 namespace NasuverseSpellEngine.Domain
 {
@@ -19,23 +20,23 @@ namespace NasuverseSpellEngine.Domain
             _logger = logger;
         }
 
-        public CastSpellResult CastSpell(Spell spell, TaigaDojo dojo)
+        public CastSpellResult CastSpell(Spell spell, WorldState world)
         {
             _logger.LogDebug("{Character} attempts to cast {Spell} (cost {Cost}), current mana {Mana}", Name, spell.Name, spell.ManaCost, Resources.Mana);
 
             if (Resources.TryConsume(spell.ManaCost))
             {
-                int oldHp = dojo.TargetHP;
+                int oldDurability = world.Durability;
                 List<SpellEffectResult> effectResults = new List<SpellEffectResult>();
 
                 foreach (ISpellEffect effect in spell.Effects)
                 {
-                    effectResults.Add(effect.Apply(this, dojo));
+                    effectResults.Add(effect.Apply(this, world));
                 }
 
                 int totalDamageDealt = effectResults.Sum(result => result.DamageDealt);
 
-                _logger.LogInformation("{Character} successfully cast {Spell} with {EffectCount} effect(s) (DojoHP {Old} -> {New}, Damage {Damage}). Remaining mana: {Mana}", Name, spell.Name, spell.Effects.Count, oldHp, dojo.TargetHP, totalDamageDealt, Resources.Mana);
+                _logger.LogInformation("{Character} successfully cast {Spell} with {EffectCount} effect(s) (Durability {Old} -> {New}, Damage {Damage}). Remaining mana: {Mana}", Name, spell.Name, spell.Effects.Count, oldDurability, world.Durability, totalDamageDealt, Resources.Mana);
 
                 return new CastSpellResult(Success: true, Caster: this, Spell: spell, EffectResults: effectResults);
             }
