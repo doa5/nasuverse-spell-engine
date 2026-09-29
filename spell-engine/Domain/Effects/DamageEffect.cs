@@ -1,3 +1,5 @@
+using NasuverseSpellEngine.Domain.World;
+
 namespace NasuverseSpellEngine.Domain.Effects
 {
     public class DamageEffect : ISpellEffect
@@ -9,9 +11,9 @@ namespace NasuverseSpellEngine.Domain.Effects
             Damage = damage;
         }
 
-        public SpellEffectResult Apply(Character caster, TaigaDojo target)
+        public SpellEffectResult Apply(Character caster, WorldState world)
         {
-            int appliedDamage = target.TakeDamage(Damage);
+            int appliedDamage = world.ApplyDamage(Damage);
             return new SpellEffectResult($"Dealt {appliedDamage} damage.", appliedDamage);
         }
     }
