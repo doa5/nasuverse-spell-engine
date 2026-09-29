@@ -50,12 +50,13 @@ namespace NasuverseSpellEngine.Application
 
         public void Run(Character selectedCharacter, WorldState world)
         {
-            Console.WriteLine($"Welcome to the Taiga Dojo with {selectedCharacter.Name}!");
-            Console.WriteLine($"Initial Mana: {selectedCharacter.Resources.Mana}, Dojo Durability: {world.Durability}\n");
-
+            string? lastAction = null;
             bool isTraining = true;
+
             while (isTraining)
             {
+                DashboardRenderer.Render(new DashboardView(selectedCharacter, world, lastAction));
+
                 int exitOption = DisplaySpellMenu(selectedCharacter);
 
                 if (!TryReadSpellChoice(exitOption, out int choice))
