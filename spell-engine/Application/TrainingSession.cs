@@ -140,7 +140,8 @@ namespace NasuverseSpellEngine.Application
         {
             CastSpellResult result = character.CastSpell(character.AvailableSpells[spellIndex], world);
             Console.WriteLine(FormatCastResult(result));
-            Console.WriteLine($"{character.Name}'s Mana: {character.Resources.Mana}, Dojo Durability: {world.Durability}\n");
+            Console.WriteLine($"{character.Name}'s Mana: {character.Resources.Mana}, Dojo Durability: {world.Durability}");
+            Console.WriteLine($"{TaigaCommentary.GetLine(world)}\n");
         }
 
         private static string FormatCastResult(CastSpellResult result)
