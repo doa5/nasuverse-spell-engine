@@ -10,7 +10,7 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public static class DashboardRenderer
     {
-        public static int Render(DashboardView view)
+        public static (int SwitchOption, int ExitOption) Render(DashboardView view)
         {
             // Console.Clear() throws IOException when output isn't attached to a real
             // console (e.g. piped/redirected input, some test runners). Skip it in that case.
@@ -23,10 +23,10 @@ namespace NasuverseSpellEngine.Application
             WriteCharacterStatus(view.ActiveCharacter);
             WriteLastAction(view.LastAction);
             WriteEventLog(view.World);
-            int exitOption = WriteSpellMenu(view.ActiveCharacter);
+            (int switchOption, int exitOption) = WriteSpellMenu(view.ActiveCharacter);
             WriteTaigaLine(view.World);
 
-            return exitOption;
+            return (switchOption, exitOption);
         }
 
         private static void WriteWorldStatus(WorldState world)
@@ -53,7 +53,7 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        private static int WriteSpellMenu(Character character)
+        private static (int SwitchOption, int ExitOption) WriteSpellMenu(Character character)
         {
             Console.WriteLine($"--- {character.Name}'s Spells ---");
             for (int i = 0; i < character.AvailableSpells.Count; i++)
@@ -62,9 +62,11 @@ namespace NasuverseSpellEngine.Application
                 Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {spell.ManaCost}, Damage: {spell.Damage})");
             }
 
-            int exitOption = character.AvailableSpells.Count + 1;
+            int switchOption = character.AvailableSpells.Count + 1;
+            int exitOption = switchOption + 1;
+            Console.WriteLine($"{switchOption}. Switch Character");
             Console.WriteLine($"{exitOption}. Exit\n");
-            return exitOption;
+            return (switchOption, exitOption);
         }
 
         private static void WriteEventLog(WorldState world)

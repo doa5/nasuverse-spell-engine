@@ -22,5 +22,4 @@ Character arcueid = CharacterFactory.Create(CharacterCatalog.Arcueid, charLogger
 Character debug = CharacterFactory.Create(CharacterCatalog.Debug, charLogger, resourceLogger);
 
 TrainingSession session = provider.GetRequiredService<TrainingSession>();
-Character selectedCharacter = session.SelectCharacter(aoko, arcueid, debug);
-session.Run(selectedCharacter, world);
+session.Run(aoko, arcueid, debug, world);

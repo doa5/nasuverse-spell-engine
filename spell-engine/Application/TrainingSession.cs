@@ -53,14 +53,15 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        public void Run(Character selectedCharacter, WorldState world)
+        public void Run(Character aoko, Character arcueid, Character debug, WorldState world)
         {
+            Character activeCharacter = SelectCharacter(aoko, arcueid, debug);
             string? lastAction = null;
             bool isTraining = true;
 
             while (isTraining)
             {
-                int exitOption = DashboardRenderer.Render(new DashboardView(selectedCharacter, world, lastAction));
+                (int switchOption, int exitOption) = DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
 
                 if (!TryReadSpellChoice(exitOption, out int choice))
                 {
@@ -75,6 +76,14 @@ namespace NasuverseSpellEngine.Application
                     continue;
                 }
 
+                if (choice == switchOption)
+                {
+                    _logger.LogInformation("User selected Switch Character");
+                    activeCharacter = SelectCharacter(aoko, arcueid, debug);
+                    lastAction = $"Switched to {activeCharacter.Name}.";
+                    continue;
+                }
+
                 if (world.Durability <= 0)
                 {
                     _logger.LogInformation("Attempt to cast on destroyed dojo (Durability {Durability})", world.Durability);
@@ -84,14 +93,14 @@ namespace NasuverseSpellEngine.Application
 
                 // Dispatch by index (scales with number of spells)
                 int spellIndex = choice - 1;
-                if (spellIndex < 0 || spellIndex >= selectedCharacter.AvailableSpells.Count)
+                if (spellIndex < 0 || spellIndex >= activeCharacter.AvailableSpells.Count)
                 {
                     _logger.LogWarning("Computed spell index out of range: {Index}", spellIndex);
                     lastAction = "Invalid spell selection. Try again.";
                     continue;
                 }
 
-                lastAction = HandleSpellCast(selectedCharacter, world, spellIndex);
+                lastAction = HandleSpellCast(activeCharacter, world, spellIndex);
                 world.AdvanceTurn();
 
                 if (world.Durability <= 0)
