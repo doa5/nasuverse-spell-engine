@@ -39,5 +39,17 @@ namespace NasuverseSpellEngine.Application
             new SpellDefinition("Half Shatter", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 500)),
             new SpellDefinition("Obliterate", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 9999)),
         ]);
+
+        /// <summary>
+        /// Every playable character definition, in menu display order. Adding a new
+        /// character only requires adding it here (and defining it above) - no other
+        /// code needs to change to make it selectable.
+        /// </summary>
+        public static readonly IReadOnlyList<CharacterDefinition> Roster =
+        [
+            Aoko,
+            Arcueid,
+            Debug,
+        ];
     }
 }
