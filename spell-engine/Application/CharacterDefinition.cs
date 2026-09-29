@@ -6,7 +6,17 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public enum EffectType
     {
-        Damage
+        /// <summary>Deals raw damage to the dojo's durability. Uses <see cref="EffectDefinition.Amount"/>.</summary>
+        Damage,
+
+        /// <summary>Adds entropy to the world, pushing it toward Heat Death Void. Uses <see cref="EffectDefinition.Amount"/>.</summary>
+        Entropy,
+
+        /// <summary>Attempts to manifest the Millennial Castle texture. Ignores <see cref="EffectDefinition.Amount"/>.</summary>
+        Texture,
+
+        /// <summary>Saturates the atmosphere with dragon mana. Ignores <see cref="EffectDefinition.Amount"/>.</summary>
+        AtmosphericBurst
     }
 
     /// <summary>Plain data describing one spell effect (no behavior, no Domain dependency).</summary>
