@@ -33,7 +33,8 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("I need more mana!", ManaCost: 0, [new EffectDefinition(EffectType.RestoreMana, Amount: 30)], Description: "Refills her mana to full at the cost of entropy."),
             ],
             TransformStateFactory: () => new AokoTransformState(),
-            AccentColor: "blue");
+            AccentColor: "blue",
+            TransformedAccentColor: "red");
 
     /// <summary>
     /// True Ancestor and last remaining Brunestud. Marble Phantasm - Seal overwrites the

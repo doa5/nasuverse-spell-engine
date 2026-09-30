@@ -8,7 +8,19 @@ namespace NasuverseSpellEngine.Domain
     public class Character
     {
         public string Name { get; }
-        public string AccentColor { get; }
+
+        /// <summary>
+        /// This character's default dashboard accent color. While
+        /// <see cref="Transform"/> is active and a <see cref="_transformedAccentColor"/>
+        /// was supplied, that color is shown instead (e.g. Aoko turning red during Redshift).
+        /// </summary>
+        public string AccentColor => Transform?.IsActive == true && _transformedAccentColor is not null
+            ? _transformedAccentColor
+            : _accentColor;
+
+        private readonly string _accentColor;
+        private readonly string? _transformedAccentColor;
+
         public ResourcePool Resources { get; }
         public List<Spell> AvailableSpells { get; private set; }
         public ICastingRules CastingRules { get; }
@@ -27,10 +39,11 @@ namespace NasuverseSpellEngine.Domain
 
         private readonly ILogger<Character> _logger;
 
-        public Character(string name, ResourcePool resources, ILogger<Character> logger, ICastingRules? castingRules = null, string accentColor = "grey")
+        public Character(string name, ResourcePool resources, ILogger<Character> logger, ICastingRules? castingRules = null, string accentColor = "grey", string? transformedAccentColor = null)
         {
             Name = name;
-            AccentColor = accentColor;
+            _accentColor = accentColor;
+            _transformedAccentColor = transformedAccentColor;
             Resources = resources;
             AvailableSpells = new List<Spell>();
             CastingRules = castingRules ?? new DefaultCastingRules();

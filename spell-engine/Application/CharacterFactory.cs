@@ -10,7 +10,7 @@ namespace NasuverseSpellEngine.Application
         {
             var pool = new ResourcePool(definition.StartingMana, resourceLogger);
             ICastingRules? castingRules = definition.CastingRulesFactory?.Invoke();
-            Character character = new Character(definition.Name, pool, logger, castingRules, definition.AccentColor);
+            Character character = new Character(definition.Name, pool, logger, castingRules, definition.AccentColor, definition.TransformedAccentColor);
 
             foreach (SpellDefinition spellDefinition in definition.Spells)
             {

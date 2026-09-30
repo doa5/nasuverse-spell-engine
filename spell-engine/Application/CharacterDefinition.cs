@@ -47,8 +47,11 @@ namespace NasuverseSpellEngine.Application
     /// <paramref name="TransformStateFactory"/> is the matching explicit factory for
     /// the <see cref="ITransformState"/> a <see cref="EffectType.Transform"/> spell
     /// should construct - required whenever <paramref name="TransformedSpells"/> is set.
-    /// <paramref name="AccentColor"/> is a Spectre.Console markup color name (e.g. "red")
+    /// <parameref name="AccentColor"/> is a Spectre.Console markup color name (e.g. "red")
     /// used to give the character's dashboard a quick visual identity.
+    /// <paramref name="TransformedAccentColor"/> is an optional alternate accent color
+    /// used instead of <paramref name="AccentColor"/> while the character's
+    /// <see cref="ITransformState"/> is active (e.g. Aoko turning red during Redshift).
     /// </summary>
     public sealed record CharacterDefinition(
         string Name,
@@ -57,5 +60,6 @@ namespace NasuverseSpellEngine.Application
         Func<ICastingRules>? CastingRulesFactory = null,
         IReadOnlyList<SpellDefinition>? TransformedSpells = null,
         Func<ITransformState>? TransformStateFactory = null,
-        string AccentColor = "grey");
+        string AccentColor = "grey",
+        string? TransformedAccentColor = null);
 }
