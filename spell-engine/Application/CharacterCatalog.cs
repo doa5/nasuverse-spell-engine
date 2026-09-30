@@ -10,20 +10,27 @@ namespace NasuverseSpellEngine.Application
     public static class CharacterCatalog
     {
     /// <summary>
-    /// The Fifth Magician. Starmine - Octogram and Earthlight Starbow 
-    /// are destruction focussed sorcery; her Fifth Magic Redshift 
-    /// is held in reserve for when borrowed time is worth the cost.
+    /// The Fifth Magician. As Teen Aoko she fights with basic magecraft and can cast
+    /// Redshift to borrow her future self's power, becoming Adult Aoko - hitting far
+    /// harder at the cost of entropy, for a limited number of turns.
     /// </summary>
     public static readonly CharacterDefinition Aoko = new(
             Name: "Aoko",
             StartingMana: 200,
             Spells:
             [
-                new SpellDefinition("Starmine - Octogram", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 35)),
-                new SpellDefinition("Earthlight Starbow", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 130)),
-
+                new SpellDefinition("Right Hook", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 10)),
+                new SpellDefinition("Starmine", ManaCost: 40, new EffectDefinition(EffectType.Damage, Amount: 60)),
+                new SpellDefinition("Redshift", ManaCost: 50, new EffectDefinition(EffectType.Transform), new EffectDefinition(EffectType.Entropy, Amount: 20)),
             ],
-            CastingRulesFactory: () => new AokoCastingRules());
+            CastingRulesFactory: () => new AokoCastingRules(),
+            TransformedSpells:
+            [
+                new SpellDefinition("Starmine - Octogram", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 35), new EffectDefinition(EffectType.Entropy, Amount: 10)),
+                new SpellDefinition("Earthlight Starbow", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 150), new EffectDefinition(EffectType.Entropy, Amount: 25)),
+                new SpellDefinition("I need more time!", ManaCost: 0, new EffectDefinition(EffectType.ExtendTransform)),
+                new SpellDefinition("I need more mana!", ManaCost: 0, new EffectDefinition(EffectType.RestoreMana, Amount: 30)),
+            ]);
 
     /// <summary>
     /// True Ancestor and last remaining Brunestud. Marble Phantasm - Seal overwrites the
