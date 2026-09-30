@@ -93,7 +93,6 @@ namespace NasuverseSpellEngine.Application
             Aoko,
             Arcueid,
             Saber,
-            Debug,
         ];
     }
 }
