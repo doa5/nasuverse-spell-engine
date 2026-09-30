@@ -39,6 +39,14 @@ namespace NasuverseSpellEngine.Domain.World
 
         public IReadOnlyCollection<string> RecentEvents => _recentEvents;
 
+        /// <summary>
+        /// Converts a "buff should last N turns" duration into an internal turn
+        /// counter. The turn a timed effect is cast on is spent activating it, not
+        /// ticking down its duration, so the counter starts one higher than the
+        /// advertised duration.
+        /// </summary>
+        private static int ToTurnCounter(int advertisedDurationTurns) => advertisedDurationTurns + 1;
+
         public int ApplyDamage(int rawDamage, double multiplier = 1.0)
         {
             int actualDamage = (int)Math.Round(rawDamage * multiplier);
@@ -78,7 +86,7 @@ namespace NasuverseSpellEngine.Domain.World
             }
 
             ActiveTexture = RealityTexture.MillennialCastle;
-            _castleTurnsRemaining = MillennialCastleDurationTurns;
+            _castleTurnsRemaining = ToTurnCounter(MillennialCastleDurationTurns);
 
             // Millennial Castle overwrites the room's rules and clears any ambient atmospheric mana.
             AtmosphericMana = false;
@@ -98,7 +106,7 @@ namespace NasuverseSpellEngine.Domain.World
             };
 
             AtmosphericMana = true;
-            _atmosphericTurnsRemaining = duration;
+            _atmosphericTurnsRemaining = ToTurnCounter(duration);
 
             PushEvent($"The atmosphere saturates with dense dragon mana for {duration} turn(s).");
         }
@@ -131,6 +139,7 @@ namespace NasuverseSpellEngine.Domain.World
                     AtmosphericMana = false;
                     PushEvent("The atmospheric mana dissipates.");
                 }
+
             }
 
             TurnCount++;
