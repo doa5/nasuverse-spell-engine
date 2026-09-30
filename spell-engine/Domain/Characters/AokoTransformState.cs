@@ -1,4 +1,6 @@
-namespace NasuverseSpellEngine.Domain
+using NasuverseSpellEngine.Domain;
+
+namespace NasuverseSpellEngine.Domain.Characters
 {
     /// <summary>
     /// Tracks Aoko's Redshift transformation: how many turns of Adult Aoko remain,

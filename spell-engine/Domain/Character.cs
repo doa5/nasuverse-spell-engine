@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using NasuverseSpellEngine.Domain.Characters;
 using NasuverseSpellEngine.Domain.Effects;
 using NasuverseSpellEngine.Domain.World;
 

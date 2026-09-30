@@ -1,6 +1,7 @@
+using NasuverseSpellEngine.Domain;
 using NasuverseSpellEngine.Domain.World;
 
-namespace NasuverseSpellEngine.Domain
+namespace NasuverseSpellEngine.Domain.Characters
 {
     /// <summary>
     /// Saber's Dragon Core produces mana internally, so unlike Aoko she is never

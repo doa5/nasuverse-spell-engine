@@ -1,6 +1,7 @@
+using NasuverseSpellEngine.Domain;
 using NasuverseSpellEngine.Domain.World;
 
-namespace NasuverseSpellEngine.Domain
+namespace NasuverseSpellEngine.Domain.Characters
 {
     /// <summary>
     /// Arcueid's Marble Phantasm draws directly on the Earth's backing, so her own

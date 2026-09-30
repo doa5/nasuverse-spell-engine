@@ -1,6 +1,7 @@
+using NasuverseSpellEngine.Domain;
 using NasuverseSpellEngine.Domain.World;
 
-namespace NasuverseSpellEngine.Domain
+namespace NasuverseSpellEngine.Domain.Characters
 {
     /// <summary>
     /// Aoko's Fifth Magic runs on borrowed time/entropy rather than mana efficiency,

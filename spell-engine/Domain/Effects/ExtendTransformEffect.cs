@@ -1,3 +1,4 @@
+using NasuverseSpellEngine.Domain.Characters;
 using NasuverseSpellEngine.Domain.World;
 
 namespace NasuverseSpellEngine.Domain.Effects

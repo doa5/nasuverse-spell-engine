@@ -1,6 +1,7 @@
 namespace NasuverseSpellEngine.Application
 {
     using NasuverseSpellEngine.Domain;
+    using NasuverseSpellEngine.Domain.Characters;
 
     /// <summary>
     /// Source of truth for character/spell data. Keeping this separate from
