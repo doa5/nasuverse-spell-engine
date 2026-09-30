@@ -10,6 +10,11 @@ namespace NasuverseSpellEngine.Domain.World
     {
         public static string GetLine(WorldState world)
         {
+            if (world.Durability <= 0)
+            {
+                return "Taiga: THE DOJO! MY DOJO! You're paying for this, I swear!!";
+            }
+
             if (world.ActiveTexture == RealityTexture.HeatDeathVoid)
             {
                 return "Taiga: I-it's freezing... and everything feels so still. What did you DO?!";
@@ -23,11 +28,6 @@ namespace NasuverseSpellEngine.Domain.World
             if (world.AtmosphericMana)
             {
                 return "Taiga: The air feels thick... like breathing static. Is that normal?!";
-            }
-
-            if (world.Durability <= 0)
-            {
-                return "Taiga: THE DOJO! MY DOJO! You're paying for this, I swear!!";
             }
 
             if (world.Durability <= 199)
