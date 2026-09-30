@@ -34,6 +34,13 @@ namespace NasuverseSpellEngine.Domain
 
             _logger.LogDebug("{Character} attempts to cast {Spell} (cost {Cost}), current mana {Mana}", Name, spell.Name, manaCost, Resources.Mana);
 
+            if (manaCost != spell.ManaCost)
+            {
+                world.PushEvent(manaCost < spell.ManaCost
+                    ? $"World interaction: {Name}'s mana cost for {spell.Name} dropped from {spell.ManaCost} to {manaCost}."
+                    : $"World interaction: {Name}'s mana cost for {spell.Name} rose from {spell.ManaCost} to {manaCost}.");
+            }
+
             if (Resources.TryConsume(manaCost))
             {
                 int oldDurability = world.Durability;
