@@ -19,6 +19,7 @@
       <Version>10.0.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12" />
+    <PackageReference Include="Spectre.Console" Version="0.57.2" />
   </ItemGroup>
 
 </Project>
