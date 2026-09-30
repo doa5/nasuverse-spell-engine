@@ -50,13 +50,6 @@ namespace NasuverseSpellEngine.Application
                     continue;
                 }
 
-                if (world.Durability <= 0)
-                {
-                    _logger.LogInformation("Attempt to cast on destroyed dojo (Durability {Durability})", world.Durability);
-                    lastAction = "Taiga: The dojo has already been destroyed! What are you doing??";
-                    continue;
-                }
-
                 int spellIndex = activeCharacter.AvailableSpells.FindIndex(spell => spell.Name == choice);
                 if (spellIndex < 0)
                 {
@@ -72,6 +65,9 @@ namespace NasuverseSpellEngine.Application
                 if (world.Durability <= 0)
                 {
                     lastAction += " The Taiga Dojo has been destroyed!";
+                    DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
+                    DashboardRenderer.RenderVictory(activeCharacter);
+                    return;
                 }
             }
         }

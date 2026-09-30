@@ -11,6 +11,26 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public static class DashboardRenderer
     {
+        /// <summary>
+        /// Draws a celebratory "You Win!" panel when the dojo's durability reaches 0.
+        /// Purely additive to the current screen - callers still show the final
+        /// dashboard frame before invoking this.
+        /// </summary>
+        public static void RenderVictory(Character character)
+        {
+            var panel = new Panel(new Markup($"[bold]{Markup.Escape(character.Name)}[/] destroyed the Taiga Dojo!\nYou win!"))
+            {
+                Header = new PanelHeader("Victory!"),
+                Border = BoxBorder.Double,
+                Padding = new Padding(2, 1),
+            };
+            panel.BorderStyle = new Style(foreground: Style.Parse(character.AccentColor).Foreground);
+
+            AnsiConsole.WriteLine();
+            AnsiConsole.Write(panel);
+            AnsiConsole.WriteLine();
+        }
+
         public static void Render(DashboardView view)
         {
             ClearConsole();
