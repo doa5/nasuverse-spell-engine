@@ -15,12 +15,12 @@ namespace NasuverseSpellEngine.Domain.World
                 return "Taiga: THE DOJO! MY DOJO! You're paying for this, I swear!!";
             }
 
-            if (world.ActiveTexture == RealityTexture.HeatDeathVoid)
+            if (world.ActiveTexture == RealityTexture.HeatDeathVoid && world.TextureChangedThisTurn)
             {
                 return "Taiga: I-it's freezing... and everything feels so still. What did you DO?!";
             }
 
-            if (world.ActiveTexture == RealityTexture.MillennialCastle)
+            if (world.ActiveTexture == RealityTexture.MillennialCastle && world.TextureChangedThisTurn)
             {
                 return "Taiga: Wait, why do the walls look like they're a thousand years old?!";
             }
