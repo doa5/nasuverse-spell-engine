@@ -66,7 +66,7 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Excalibur", ManaCost: 300, [new EffectDefinition(EffectType.Damage, Amount: 130)], Description: "Her Noble Phantasm-tier finisher."),
         ],
         CastingRulesFactory: () => new SaberCastingRules(),
-        AccentColor: "yellow");
+        AccentColor: "gold1");
 
     /// <summary>
     /// Debug-only character with simple, predictable spells for manually smoke-testing

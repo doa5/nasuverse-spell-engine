@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using NasuverseSpellEngine.Domain;
 using NasuverseSpellEngine.Domain.World;
+using Spectre.Console;
 
 namespace NasuverseSpellEngine.Application
 {
@@ -15,33 +16,20 @@ namespace NasuverseSpellEngine.Application
 
         public Character SelectCharacter(IReadOnlyList<Character> roster)
         {
-            DashboardRenderer.RenderCharacterSelect(roster);
+            DashboardRenderer.PrepareCharacterSelect();
 
-            while (true)
-            {
-                Console.Write("Choose a character: ");
-                string characterInput = Console.ReadLine()!;
-                Console.Write("\n");
+            var prompt = new SelectionPrompt<Character>()
+                .Title("Select a character:")
+                .HighlightStyle(new Style(decoration: Decoration.Underline))
+                .UseConverter(character => character.Name)
+                .AddChoices(roster);
 
-                if (!int.TryParse(characterInput, out int characterChoice))
-                {
-                    _logger.LogWarning("Invalid character input (non-numeric): {Input}", characterInput);
-                    Console.WriteLine("That's not a number. Try again.\n");
-                    continue;
-                }
-
-                _logger.LogDebug("User selected character {Choice}", characterChoice);
-
-                int index = characterChoice - 1;
-                if (index >= 0 && index < roster.Count)
-                {
-                    return roster[index];
-                }
-
-                _logger.LogWarning("Choice out of range: {Choice}", characterChoice);
-                Console.WriteLine($"Please choose a number between 1 and {roster.Count}.\n");
-            }
+            Character chosen = AnsiConsole.Prompt(prompt);
+            _logger.LogDebug("User selected character {Character}", chosen.Name);
+            return chosen;
         }
+
+        private const string SwitchCharacterChoice = "Switch Character";
 
         public void Run(IReadOnlyList<Character> roster, WorldState world)
         {
@@ -50,14 +38,11 @@ namespace NasuverseSpellEngine.Application
 
             while (true)
             {
-                int switchOption = DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
+                DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
 
-                if (!TryReadSpellChoice(switchOption, out int choice))
-                {
-                    continue;
-                }
+                string choice = ReadSpellChoice(activeCharacter);
 
-                if (choice == switchOption)
+                if (choice == SwitchCharacterChoice)
                 {
                     _logger.LogInformation("User selected Switch Character");
                     activeCharacter = SelectCharacter(roster);
@@ -72,11 +57,10 @@ namespace NasuverseSpellEngine.Application
                     continue;
                 }
 
-                // Dispatch by index (scales with number of spells)
-                int spellIndex = choice - 1;
-                if (spellIndex < 0 || spellIndex >= activeCharacter.AvailableSpells.Count)
+                int spellIndex = activeCharacter.AvailableSpells.FindIndex(spell => spell.Name == choice);
+                if (spellIndex < 0)
                 {
-                    _logger.LogWarning("Computed spell index out of range: {Index}", spellIndex);
+                    _logger.LogWarning("Selected spell not found in available spells: {Choice}", choice);
                     lastAction = "Invalid spell selection. Try again.";
                     continue;
                 }
@@ -92,29 +76,17 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        private bool TryReadSpellChoice(int switchOption, out int choice)
+        private string ReadSpellChoice(Character character)
         {
-            Console.Write("Choose a spell: ");
-            string input = Console.ReadLine()!; // ! means "trust me, it's not null"
-            Console.Write("\n");
+            var prompt = new SelectionPrompt<string>()
+                .Title("Choose a spell:")
+                .HighlightStyle(new Style(decoration: Decoration.Underline))
+                .AddChoices(character.AvailableSpells.Select(spell => spell.Name))
+                .AddChoices(SwitchCharacterChoice);
 
-            if (!int.TryParse(input, out choice))
-            {
-                _logger.LogWarning("Invalid input (non-numeric): {Input}", input);
-                Console.WriteLine("That's not a number. Try again.\n");
-                return false;
-            }
-
+            string choice = AnsiConsole.Prompt(prompt);
             _logger.LogDebug("User selected {Choice}", choice);
-
-            if (choice < 1 || choice > switchOption)
-            {
-                _logger.LogWarning("Choice out of range: {Choice}", choice);
-                Console.WriteLine("Invalid choice. Try again.\n");
-                return false;
-            }
-
-            return true;
+            return choice;
         }
 
         private static string HandleSpellCast(Character character, WorldState world, int spellIndex)

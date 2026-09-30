@@ -11,7 +11,7 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public static class DashboardRenderer
     {
-        public static int Render(DashboardView view)
+        public static void Render(DashboardView view)
         {
             ClearConsole();
 
@@ -22,29 +22,18 @@ namespace NasuverseSpellEngine.Application
             WriteCharacterStatus(view.ActiveCharacter);
             WriteLastAction(view.LastAction);
             WriteEventLog(view.World);
-            int switchOption = WriteSpellMenu(view.ActiveCharacter, view.World);
+            WriteSpellMenu(view.ActiveCharacter, view.World);
             WriteTaigaLine(view.World, accent);
-
-            return switchOption;
         }
 
         /// <summary>
-        /// Clears the screen and draws only the character selection list — used both
+        /// Clears the screen ahead of the character selection prompt — used both
         /// for the initial character pick and for the in-session "Switch Character"
         /// option, so it fully replaces the dashboard rather than appending below it.
         /// </summary>
-        public static void RenderCharacterSelect(IReadOnlyList<Character> roster)
+        public static void PrepareCharacterSelect()
         {
             ClearConsole();
-
-            AnsiConsole.MarkupLine("Select a character:");
-            for (int i = 0; i < roster.Count; i++)
-            {
-                Character character = roster[i];
-                AnsiConsole.MarkupLine($"{i + 1}. [{character.AccentColor}]{character.Name}[/]");
-            }
-
-            AnsiConsole.WriteLine();
         }
 
         private static void ClearConsole()
@@ -92,7 +81,7 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        private static int WriteSpellMenu(Character character, WorldState world)
+        private static void WriteSpellMenu(Character character, WorldState world)
         {
             AnsiConsole.MarkupLine($"[{character.AccentColor}]-- {character.Name}'s Spells --[/]");
 
@@ -122,11 +111,7 @@ namespace NasuverseSpellEngine.Application
             }
 
             AnsiConsole.Write(table);
-
-            int switchOption = character.AvailableSpells.Count + 1;
-            AnsiConsole.MarkupLine($"{switchOption}. Switch Character");
             AnsiConsole.WriteLine();
-            return switchOption;
         }
 
         private static void WriteEventLog(WorldState world)
