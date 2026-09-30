@@ -11,7 +11,7 @@ namespace NasuverseSpellEngine.Domain.World
 
         private const int MillennialCastleDurationTurns = 4;
         private const int AtmosphericManaDurationTurns = 3;
-        private const int AtmosphericManaDurationInCastleTurns = 1;
+        private const int AtmosphericManaDurationInCastleTurns = 2;
         private const int AtmosphericManaDurationInHeatDeathVoidTurns = 1;
 
         private readonly Queue<string> _recentEvents = new Queue<string>();
@@ -20,6 +20,7 @@ namespace NasuverseSpellEngine.Domain.World
         private int _entropy;
         private int _castleTurnsRemaining;
         private int _atmosphericTurnsRemaining;
+        private int _textureChangedOnTurn = -1;
 
         public int Durability
         {
@@ -36,6 +37,24 @@ namespace NasuverseSpellEngine.Domain.World
         public bool AtmosphericMana { get; private set; }
         public RealityTexture ActiveTexture { get; private set; } = RealityTexture.Normal;
         public int TurnCount { get; private set; }
+
+        /// <summary>True only on the turn <see cref="ActiveTexture"/> last changed - used to
+        /// keep Taiga's texture-change commentary from repeating every render while a
+        /// texture is merely active. Texture changes always happen before this cycle's
+        /// <see cref="AdvanceTurn"/> increments <see cref="TurnCount"/>, so the stamped
+        /// turn is compared against the turn just finished, not the upcoming one.</summary>
+        public bool TextureChangedThisTurn => _textureChangedOnTurn == TurnCount - 1;
+
+        private void SetActiveTexture(RealityTexture texture)
+        {
+            if (ActiveTexture == texture)
+            {
+                return;
+            }
+
+            ActiveTexture = texture;
+            _textureChangedOnTurn = TurnCount;
+        }
 
         public IReadOnlyCollection<string> RecentEvents => _recentEvents;
 
@@ -69,7 +88,7 @@ namespace NasuverseSpellEngine.Domain.World
 
             if (Entropy >= MaxEntropy)
             {
-                ActiveTexture = RealityTexture.HeatDeathVoid;
+                SetActiveTexture(RealityTexture.HeatDeathVoid);
                 _castleTurnsRemaining = 0;
                 _atmosphericTurnsRemaining = 0;
                 AtmosphericMana = false;
@@ -85,7 +104,7 @@ namespace NasuverseSpellEngine.Domain.World
                 return false;
             }
 
-            ActiveTexture = RealityTexture.MillennialCastle;
+            SetActiveTexture(RealityTexture.MillennialCastle);
             _castleTurnsRemaining = ToTurnCounter(MillennialCastleDurationTurns);
 
             // Millennial Castle overwrites the room's rules and clears any ambient atmospheric mana.
@@ -109,6 +128,15 @@ namespace NasuverseSpellEngine.Domain.World
             _atmosphericTurnsRemaining = ToTurnCounter(duration);
 
             PushEvent($"The atmosphere saturates with dense dragon mana for {duration} turn(s).");
+
+            if (ActiveTexture == RealityTexture.MillennialCastle)
+            {
+                PushEvent($"World interaction: the Millennial Castle destabilizes the burst, cutting its duration from {AtmosphericManaDurationTurns} to {duration} turn(s).");
+            }
+            else if (ActiveTexture == RealityTexture.HeatDeathVoid)
+            {
+                PushEvent($"World interaction: the Heat Death Void starves the burst, cutting its duration from {AtmosphericManaDurationTurns} to {duration} turn(s).");
+            }
         }
 
         public void AdvanceTurn()
@@ -125,7 +153,7 @@ namespace NasuverseSpellEngine.Domain.World
 
                 if (_castleTurnsRemaining == 0)
                 {
-                    ActiveTexture = RealityTexture.Normal;
+                    SetActiveTexture(RealityTexture.Normal);
                     PushEvent("Millennial Castle fades, and the dojo's walls return to normal.");
                 }
             }
@@ -163,6 +191,7 @@ namespace NasuverseSpellEngine.Domain.World
             ActiveTexture = RealityTexture.Normal;
             _castleTurnsRemaining = 0;
             _atmosphericTurnsRemaining = 0;
+            _textureChangedOnTurn = -1;
             _recentEvents.Clear();
 
             PushEvent("The dojo has been repaired and the world state reset.");
