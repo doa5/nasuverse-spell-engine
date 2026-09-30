@@ -14,22 +14,23 @@ namespace NasuverseSpellEngine.Domain
         {
             if (IsFifthMagic(spell))
             {
-                return spell.ManaCost;
+                return ApplyHeatDeathTax(spell.ManaCost, world);
             }
 
             if (world.AtmosphericMana)
             {
                 // Saber's dragon-mana saturation lets Aoko draw free energy from the air.
+                // Even a dead world can't tax energy that costs nothing to begin with.
                 return 0;
             }
 
             if (world.ActiveTexture == RealityTexture.MillennialCastle)
             {
                 // The Castle overwrites the room's rules, suppressing standard human magecraft.
-                return spell.ManaCost * 2;
+                return ApplyHeatDeathTax(spell.ManaCost * 2, world);
             }
 
-            return spell.ManaCost;
+            return ApplyHeatDeathTax(spell.ManaCost, world);
         }
 
         private static bool IsFifthMagic(Spell spell) => spell.Name.Contains("Fifth Magic");

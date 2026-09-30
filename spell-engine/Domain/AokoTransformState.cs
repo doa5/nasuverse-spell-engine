@@ -20,6 +20,12 @@ namespace NasuverseSpellEngine.Domain
         /// </summary>
         private static readonly int[] ExtensionEntropyCosts = [20, 35, 55, 80];
 
+        /// <summary>World entropy percentage at which borrowed time starts bleeding entropy passively, even without casting.</summary>
+        public const int PassiveEscalationEntropyThreshold = 75;
+
+        /// <summary>Entropy added per turn once <see cref="PassiveEscalationEntropyThreshold"/> is reached while transformed.</summary>
+        public const int PassiveEscalationEntropyPerTurn = 5;
+
         public int TurnsRemaining { get; private set; }
 
         public int ExtensionCount { get; private set; }

@@ -50,10 +50,18 @@ namespace NasuverseSpellEngine.Domain
 
         /// <summary>
         /// Advances this character's <see cref="Transform"/> by one turn, if any,
-        /// swapping back to the original spell set when it expires.
+        /// swapping back to the original spell set when it expires. While
+        /// transformed and the world is dangerously entropic, borrowed power keeps
+        /// bleeding entropy passively even without casting anything.
         /// </summary>
-        public void TickTransform()
+        public void TickTransform(WorldState world)
         {
+            if (Transform is AokoTransformState { IsActive: true } && world.Entropy >= AokoTransformState.PassiveEscalationEntropyThreshold)
+            {
+                world.AddEntropy(AokoTransformState.PassiveEscalationEntropyPerTurn);
+                world.PushEvent($"World interaction: {Name}'s borrowed time bleeds entropy on its own ({AokoTransformState.PassiveEscalationEntropyPerTurn}% passively) at {world.Entropy}% entropy.");
+            }
+
             Transform?.Tick(SwapSpellSet);
         }
 

@@ -14,6 +14,6 @@ namespace NasuverseSpellEngine.Domain
     public class SaberCastingRules : DefaultCastingRules
     {
         public override int GetManaCost(Spell spell, WorldState world) =>
-            world.AtmosphericMana ? 0 : spell.ManaCost;
+            world.AtmosphericMana ? 0 : ApplyHeatDeathTax(spell.ManaCost, world);
     }
 }

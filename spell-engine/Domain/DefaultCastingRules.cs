@@ -9,7 +9,10 @@ namespace NasuverseSpellEngine.Domain
     /// </summary>
     public class DefaultCastingRules : ICastingRules
     {
-        public virtual int GetManaCost(Spell spell, WorldState world) => spell.ManaCost;
+        /// <summary>Mana cost multiplier while the Heat Death Void is active - even the most efficient magecraft struggles in a dead world.</summary>
+        protected const double HeatDeathVoidManaMultiplier = 2.0;
+
+        public virtual int GetManaCost(Spell spell, WorldState world) => ApplyHeatDeathTax(spell.ManaCost, world);
 
         public virtual bool CanCast(Spell spell, WorldState world) => true;
 
@@ -19,5 +22,14 @@ namespace NasuverseSpellEngine.Domain
         /// </summary>
         public virtual double GetDamageMultiplier(WorldState world) =>
             world.ActiveTexture == RealityTexture.MillennialCastle ? 0.5 : 1.0;
+
+        /// <summary>
+        /// Doubles <paramref name="cost"/> while the Heat Death Void is active. Every
+        /// character's <see cref="GetManaCost"/> override should route its final
+        /// result through this so the tax always applies, regardless of whatever
+        /// character-specific discount/surcharge logic ran first.
+        /// </summary>
+        protected static int ApplyHeatDeathTax(int cost, WorldState world) =>
+            world.ActiveTexture == RealityTexture.HeatDeathVoid ? (int)(cost * HeatDeathVoidManaMultiplier) : cost;
     }
 }

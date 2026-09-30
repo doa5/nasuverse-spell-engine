@@ -20,17 +20,17 @@ namespace NasuverseSpellEngine.Domain
             {
                 // A decaying, entropy-ridden world weakens Arcueid's connection to the Earth,
                 // making the Castle far more expensive to manifest.
-                return world.Entropy >= 100 ? baseCost * 2 : baseCost;
+                return ApplyHeatDeathTax(world.Entropy >= 100 ? baseCost * 2 : baseCost, world);
             }
 
             if (world.AtmosphericMana)
             {
                 // Saber's high-density dragon mana creates noise in the natural order,
                 // making Arcueid's environmental manipulation harder until it's purged.
-                return (int)(baseCost * 1.5);
+                return ApplyHeatDeathTax((int)(baseCost * 1.5), world);
             }
 
-            return baseCost;
+            return ApplyHeatDeathTax(baseCost, world);
         }
 
         private static bool IsMillennialCastle(Spell spell) => spell.Name.Contains("Marble Phantasm");
