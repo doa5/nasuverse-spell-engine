@@ -92,6 +92,7 @@ namespace NasuverseSpellEngine.Application
 
                 lastAction = HandleSpellCast(activeCharacter, world, spellIndex);
                 world.AdvanceTurn();
+                activeCharacter.TickTransform();
 
                 if (world.Durability <= 0)
                 {

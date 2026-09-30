@@ -44,11 +44,15 @@ namespace NasuverseSpellEngine.Application
     /// <paramref name="TransformedSpells"/> is an optional alternate spell list the
     /// character swaps to when a <see cref="EffectType.Transform"/> spell is cast
     /// (e.g. Adult Aoko's kit), and back from when the transform expires.
+    /// <paramref name="TransformStateFactory"/> is the matching explicit factory for
+    /// the <see cref="ITransformState"/> a <see cref="EffectType.Transform"/> spell
+    /// should construct - required whenever <paramref name="TransformedSpells"/> is set.
     /// </summary>
     public sealed record CharacterDefinition(
         string Name,
         int StartingMana,
         IReadOnlyList<SpellDefinition> Spells,
         Func<ICastingRules>? CastingRulesFactory = null,
-        IReadOnlyList<SpellDefinition>? TransformedSpells = null);
+        IReadOnlyList<SpellDefinition>? TransformedSpells = null,
+        Func<ITransformState>? TransformStateFactory = null);
 }

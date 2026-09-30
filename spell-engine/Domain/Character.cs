@@ -8,8 +8,20 @@ namespace NasuverseSpellEngine.Domain
     {
         public string Name { get; }
         public ResourcePool Resources { get; }
-        public List<Spell> AvailableSpells { get; }
+        public List<Spell> AvailableSpells { get; private set; }
         public ICastingRules CastingRules { get; }
+
+        /// <summary>
+        /// Character-local transformation state (e.g. Aoko's Redshift). Null for
+        /// characters that never transform.
+        /// </summary>
+        public ITransformState? Transform { get; set; }
+
+        /// <summary>
+        /// The spell list to swap to/from when <see cref="Transform"/> activates or
+        /// reverts (e.g. Adult Aoko's kit). Null for characters that never transform.
+        /// </summary>
+        public List<Spell>? AlternateSpells { get; set; }
 
         private readonly ILogger<Character> _logger;
 
@@ -20,6 +32,29 @@ namespace NasuverseSpellEngine.Domain
             AvailableSpells = new List<Spell>();
             CastingRules = castingRules ?? new DefaultCastingRules();
             _logger = logger;
+        }
+
+        /// <summary>
+        /// Swaps <see cref="AvailableSpells"/> with <see cref="AlternateSpells"/>
+        /// (e.g. Teen Aoko &lt;-&gt; Adult Aoko). No-op if there is no alternate kit.
+        /// </summary>
+        public void SwapSpellSet()
+        {
+            if (AlternateSpells is null)
+            {
+                return;
+            }
+
+            (AvailableSpells, AlternateSpells) = (AlternateSpells, AvailableSpells);
+        }
+
+        /// <summary>
+        /// Advances this character's <see cref="Transform"/> by one turn, if any,
+        /// swapping back to the original spell set when it expires.
+        /// </summary>
+        public void TickTransform()
+        {
+            Transform?.Tick(SwapSpellSet);
         }
 
         public CastSpellResult CastSpell(Spell spell, WorldState world)

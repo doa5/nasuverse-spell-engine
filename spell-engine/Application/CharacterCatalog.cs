@@ -30,7 +30,8 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Earthlight Starbow", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 150), new EffectDefinition(EffectType.Entropy, Amount: 25)),
                 new SpellDefinition("I need more time!", ManaCost: 0, new EffectDefinition(EffectType.ExtendTransform)),
                 new SpellDefinition("I need more mana!", ManaCost: 0, new EffectDefinition(EffectType.RestoreMana, Amount: 30)),
-            ]);
+            ],
+            TransformStateFactory: () => new AokoTransformState());
 
     /// <summary>
     /// True Ancestor and last remaining Brunestud. Marble Phantasm - Seal overwrites the

@@ -14,7 +14,14 @@ namespace NasuverseSpellEngine.Application
 
             foreach (SpellDefinition spellDefinition in definition.Spells)
             {
-                character.AvailableSpells.Add(CreateSpell(spellDefinition));
+                character.AvailableSpells.Add(CreateSpell(spellDefinition, definition.TransformStateFactory));
+            }
+
+            if (definition.TransformedSpells is not null)
+            {
+                character.AlternateSpells = definition.TransformedSpells
+                    .Select(spellDefinition => CreateSpell(spellDefinition, definition.TransformStateFactory))
+                    .ToList();
             }
 
             return character;
@@ -31,18 +38,22 @@ namespace NasuverseSpellEngine.Application
                 .ToList();
         }
 
-        private static Spell CreateSpell(SpellDefinition definition)
+        private static Spell CreateSpell(SpellDefinition definition, Func<ITransformState>? transformStateFactory)
         {
-            ISpellEffect effect = CreateEffect(definition.Effect);
-            return new Spell(definition.Name, definition.ManaCost, effect);
+            ISpellEffect[] effects = definition.Effects.Select(effect => CreateEffect(effect, transformStateFactory)).ToArray();
+            return new Spell(definition.Name, definition.ManaCost, effects);
         }
 
-        private static ISpellEffect CreateEffect(EffectDefinition definition) => definition.Type switch
+        private static ISpellEffect CreateEffect(EffectDefinition definition, Func<ITransformState>? transformStateFactory) => definition.Type switch
         {
             EffectType.Damage => new DamageEffect(definition.Amount),
             EffectType.Entropy => new EntropyEffect(definition.Amount),
             EffectType.Texture => new TextureEffect(),
             EffectType.AtmosphericBurst => new AtmosphericBurstEffect(),
+            EffectType.Transform => new TransformEffect(transformStateFactory
+                ?? throw new InvalidOperationException("A Transform effect requires the character's CharacterDefinition.TransformStateFactory to be set.")),
+            EffectType.ExtendTransform => new ExtendTransformEffect(),
+            EffectType.RestoreMana => new RestoreManaEffect(definition.Amount),
             _ => throw new ArgumentOutOfRangeException(nameof(definition), definition.Type, "Unknown effect type"),
         };
     }
