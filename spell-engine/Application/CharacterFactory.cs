@@ -9,7 +9,8 @@ namespace NasuverseSpellEngine.Application
         public static Character Create(CharacterDefinition definition, ILogger<Character> logger, ILogger<ResourcePool> resourceLogger)
         {
             var pool = new ResourcePool(definition.StartingMana, resourceLogger);
-            Character character = new Character(definition.Name, pool, logger);
+            ICastingRules? castingRules = definition.CastingRulesFactory?.Invoke();
+            Character character = new Character(definition.Name, pool, logger, castingRules);
 
             foreach (SpellDefinition spellDefinition in definition.Spells)
             {

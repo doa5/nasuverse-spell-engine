@@ -22,5 +22,12 @@ namespace NasuverseSpellEngine.Domain
         /// the current world state (e.g. a texture that suppresses certain magic).
         /// </summary>
         bool CanCast(Spell spell, WorldState world);
+
+        /// <summary>
+        /// Multiplier applied to a damage effect's raw damage before it is applied
+        /// to <see cref="WorldState"/>, given the current world state (e.g. a texture
+        /// that resists or empowers a particular caster's attacks).
+        /// </summary>
+        double GetDamageMultiplier(WorldState world);
     }
 }

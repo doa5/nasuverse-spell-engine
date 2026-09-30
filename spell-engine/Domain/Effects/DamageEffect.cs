@@ -13,7 +13,8 @@ namespace NasuverseSpellEngine.Domain.Effects
 
         public SpellEffectResult Apply(Character caster, WorldState world)
         {
-            int appliedDamage = world.ApplyDamage(Damage);
+            double multiplier = caster.CastingRules.GetDamageMultiplier(world);
+            int appliedDamage = world.ApplyDamage(Damage, multiplier);
             return new SpellEffectResult($"Dealt {appliedDamage} damage.", appliedDamage);
         }
     }

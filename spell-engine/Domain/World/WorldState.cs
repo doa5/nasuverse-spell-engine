@@ -11,7 +11,7 @@ namespace NasuverseSpellEngine.Domain.World
 
         private const int MillennialCastleDurationTurns = 4;
         private const int AtmosphericManaDurationTurns = 3;
-        private const int AtmosphericManaDurationInCastleTurns = 2;
+        private const int AtmosphericManaDurationInCastleTurns = 1;
         private const int AtmosphericManaDurationInHeatDeathVoidTurns = 1;
 
         private readonly Queue<string> _recentEvents = new Queue<string>();
@@ -39,11 +39,9 @@ namespace NasuverseSpellEngine.Domain.World
 
         public IReadOnlyCollection<string> RecentEvents => _recentEvents;
 
-        public int ApplyDamage(int rawDamage)
+        public int ApplyDamage(int rawDamage, double multiplier = 1.0)
         {
-            int actualDamage = ActiveTexture == RealityTexture.MillennialCastle
-                ? rawDamage / 2
-                : rawDamage;
+            int actualDamage = (int)Math.Round(rawDamage * multiplier);
 
             Durability -= actualDamage;
 

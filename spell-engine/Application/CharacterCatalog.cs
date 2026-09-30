@@ -1,5 +1,7 @@
 namespace NasuverseSpellEngine.Application
 {
+    using NasuverseSpellEngine.Domain;
+
     /// <summary>
     /// Source of truth for character/spell data. Keeping this separate from
     /// CharacterFactory means game balance can be read and tuned here without
@@ -7,14 +9,21 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public static class CharacterCatalog
     {
-        public static readonly CharacterDefinition Aoko = new(
+    /// <summary>
+    /// The Fifth Magician. Starmine - Octogram and Earthlight Starbow 
+    /// are destruction focussed sorcery; her Fifth Magic Redshift 
+    /// is held in reserve for when borrowed time is worth the cost.
+    /// </summary>
+    public static readonly CharacterDefinition Aoko = new(
             Name: "Aoko",
             StartingMana: 200,
             Spells:
             [
-                new SpellDefinition("Earthlight Starbow", ManaCost: 50, new EffectDefinition(EffectType.Damage, Amount: 35)),
-                new SpellDefinition("Snap & Draw", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 5)),
-            ]);
+                new SpellDefinition("Starmine - Octogram", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 35)),
+                new SpellDefinition("Earthlight Starbow", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 130)),
+
+            ],
+            CastingRulesFactory: () => new AokoCastingRules());
 
     /// <summary>
     /// True Ancestor and last remaining Brunestud. Marble Phantasm - Seal overwrites the
@@ -29,7 +38,8 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Out of my Way!", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 35)),
                 new SpellDefinition("Marble Phantasm - Seal", ManaCost: 150, new EffectDefinition(EffectType.Texture)),
                 new SpellDefinition("Melty Blood", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 140)),
-        ]);
+        ],
+        CastingRulesFactory: () => new ArcueidCastingRules());
 
     /// <summary>
     /// King of Knights. Standard attack (Invisible Air) is an unseen wind-blade strike;
@@ -44,7 +54,8 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Invisible Air", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 40)),
                 new SpellDefinition("Mana Burst", ManaCost: 30, new EffectDefinition(EffectType.AtmosphericBurst)),
                 new SpellDefinition("Excalibur", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 130)),
-        ]);
+        ],
+        CastingRulesFactory: () => new SaberCastingRules());
 
     /// <summary>
     /// Debug-only character with simple, predictable spells for manually smoke-testing

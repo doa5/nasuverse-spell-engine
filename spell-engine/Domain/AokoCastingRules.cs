@@ -1,0 +1,37 @@
+using NasuverseSpellEngine.Domain.World;
+
+namespace NasuverseSpellEngine.Domain
+{
+    /// <summary>
+    /// Aoko's Fifth Magic runs on borrowed time/entropy rather than mana efficiency,
+    /// so her standard magecraft reacts to the room's rules the way any human
+    /// magecraft would: Saber's atmospheric mana feeds it for free, while Arcueid's
+    /// Millennial Castle suppresses it and taxes it for double mana.
+    /// </summary>
+    public class AokoCastingRules : DefaultCastingRules
+    {
+        public override int GetManaCost(Spell spell, WorldState world)
+        {
+            if (IsFifthMagic(spell))
+            {
+                return spell.ManaCost;
+            }
+
+            if (world.AtmosphericMana)
+            {
+                // Saber's dragon-mana saturation lets Aoko draw free energy from the air.
+                return 0;
+            }
+
+            if (world.ActiveTexture == RealityTexture.MillennialCastle)
+            {
+                // The Castle overwrites the room's rules, suppressing standard human magecraft.
+                return spell.ManaCost * 2;
+            }
+
+            return spell.ManaCost;
+        }
+
+        private static bool IsFifthMagic(Spell spell) => spell.Name.Contains("Fifth Magic");
+    }
+}

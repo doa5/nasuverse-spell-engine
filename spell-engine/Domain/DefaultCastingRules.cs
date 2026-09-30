@@ -9,8 +9,15 @@ namespace NasuverseSpellEngine.Domain
     /// </summary>
     public class DefaultCastingRules : ICastingRules
     {
-        public int GetManaCost(Spell spell, WorldState world) => spell.ManaCost;
+        public virtual int GetManaCost(Spell spell, WorldState world) => spell.ManaCost;
 
-        public bool CanCast(Spell spell, WorldState world) => true;
+        public virtual bool CanCast(Spell spell, WorldState world) => true;
+
+        /// <summary>
+        /// The Millennial Castle overwrites the room to resist outside magic, halving
+        /// damage for everyone except the one who manifested it (see <c>ArcueidCastingRules</c>).
+        /// </summary>
+        public virtual double GetDamageMultiplier(WorldState world) =>
+            world.ActiveTexture == RealityTexture.MillennialCastle ? 0.5 : 1.0;
     }
 }
