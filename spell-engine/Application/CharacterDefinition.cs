@@ -34,7 +34,7 @@ namespace NasuverseSpellEngine.Application
     public sealed record EffectDefinition(EffectType Type, int Amount = 0);
 
     /// <summary>Plain data describing one spell (no behavior, no Domain dependency).</summary>
-    public sealed record SpellDefinition(string Name, int ManaCost, params EffectDefinition[] Effects);
+    public sealed record SpellDefinition(string Name, int ManaCost, IReadOnlyList<EffectDefinition> Effects, string? Description = null);
 
     /// <summary>
     /// Plain data describing one character's starting stats and spell list.

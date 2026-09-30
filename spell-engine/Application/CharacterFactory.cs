@@ -41,7 +41,7 @@ namespace NasuverseSpellEngine.Application
         private static Spell CreateSpell(SpellDefinition definition, Func<ITransformState>? transformStateFactory)
         {
             ISpellEffect[] effects = definition.Effects.Select(effect => CreateEffect(effect, transformStateFactory)).ToArray();
-            return new Spell(definition.Name, definition.ManaCost, effects);
+            return new Spell(definition.Name, definition.ManaCost, effects, definition.Description);
         }
 
         private static ISpellEffect CreateEffect(EffectDefinition definition, Func<ITransformState>? transformStateFactory) => definition.Type switch

@@ -18,7 +18,7 @@ namespace NasuverseSpellEngine.Application
             WriteCharacterStatus(view.ActiveCharacter);
             WriteLastAction(view.LastAction);
             WriteEventLog(view.World);
-            (int switchOption, int exitOption) = WriteSpellMenu(view.ActiveCharacter);
+            (int switchOption, int exitOption) = WriteSpellMenu(view.ActiveCharacter, view.World);
             WriteTaigaLine(view.World);
 
             return (switchOption, exitOption);
@@ -76,13 +76,22 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        private static (int SwitchOption, int ExitOption) WriteSpellMenu(Character character)
+        private static (int SwitchOption, int ExitOption) WriteSpellMenu(Character character, WorldState world)
         {
             Console.WriteLine($"--- {character.Name}'s Spells ---");
             for (int i = 0; i < character.AvailableSpells.Count; i++)
             {
                 Spell spell = character.AvailableSpells[i];
-                Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {spell.ManaCost}, Damage: {spell.Damage})");
+                int effectiveCost = character.CastingRules.GetManaCost(spell, world);
+                string costDisplay = effectiveCost != spell.ManaCost
+                    ? $"{effectiveCost} (base {spell.ManaCost})"
+                    : $"{effectiveCost}";
+
+                Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {costDisplay}, Damage: {spell.Damage})");
+                if (spell.Description is not null)
+                {
+                    Console.WriteLine($"     {spell.Description}");
+                }
             }
 
             int switchOption = character.AvailableSpells.Count + 1;

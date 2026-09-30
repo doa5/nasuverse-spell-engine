@@ -16,20 +16,20 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public static readonly CharacterDefinition Aoko = new(
             Name: "Aoko",
-            StartingMana: 200,
+            StartingMana: 250,
             Spells:
             [
-                new SpellDefinition("Right Hook", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 10)),
-                new SpellDefinition("Starmine", ManaCost: 40, new EffectDefinition(EffectType.Damage, Amount: 60)),
-                new SpellDefinition("Redshift", ManaCost: 50, new EffectDefinition(EffectType.Transform), new EffectDefinition(EffectType.Entropy, Amount: 20)),
+                new SpellDefinition("Right Hook", ManaCost: 0, [new EffectDefinition(EffectType.Damage, Amount: 10)], Description: "A quick, mana-free jab. Weak, but always available."),
+                new SpellDefinition("Starmine", ManaCost: 40, [new EffectDefinition(EffectType.Damage, Amount: 60)], Description: "Teen Aoko's strongest normal magecraft - a focused explosive bolt."),
+                new SpellDefinition("Redshift", ManaCost: 30, [new EffectDefinition(EffectType.Transform), new EffectDefinition(EffectType.Entropy, Amount: 20)], Description: "Borrows her future self's power, transforming into Adult Aoko for several turns at the cost of entropy."),
             ],
             CastingRulesFactory: () => new AokoCastingRules(),
             TransformedSpells:
             [
-                new SpellDefinition("Starmine - Octogram", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 35), new EffectDefinition(EffectType.Entropy, Amount: 10)),
-                new SpellDefinition("Earthlight Starbow", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 150), new EffectDefinition(EffectType.Entropy, Amount: 25)),
-                new SpellDefinition("I need more time!", ManaCost: 0, new EffectDefinition(EffectType.ExtendTransform)),
-                new SpellDefinition("I need more mana!", ManaCost: 0, new EffectDefinition(EffectType.RestoreMana, Amount: 30)),
+                new SpellDefinition("Starmine - Octogram", ManaCost: 25, [new EffectDefinition(EffectType.Damage, Amount: 35), new EffectDefinition(EffectType.Entropy, Amount: 10)], Description: "Adult Aoko's upgraded Starmine - now just a solid normal attack."),
+                new SpellDefinition("Earthlight Starbow", ManaCost: 150, [new EffectDefinition(EffectType.Damage, Amount: 150), new EffectDefinition(EffectType.Entropy, Amount: 25)], Description: "Adult Aoko's ultimate destruction sorcery."),
+                new SpellDefinition("I need more time!", ManaCost: 0, [new EffectDefinition(EffectType.ExtendTransform)], Description: "Throws more of her time to the future, extending Redshift at an escalating entropy cost."),
+                new SpellDefinition("I need more mana!", ManaCost: 0, [new EffectDefinition(EffectType.RestoreMana, Amount: 30)], Description: "Refills her mana to full at the cost of entropy."),
             ],
             TransformStateFactory: () => new AokoTransformState());
 
@@ -43,9 +43,9 @@ namespace NasuverseSpellEngine.Application
         StartingMana: 500,
         Spells:
         [
-                new SpellDefinition("Out of my Way!", ManaCost: 20, new EffectDefinition(EffectType.Damage, Amount: 35)),
-                new SpellDefinition("Marble Phantasm - Seal", ManaCost: 150, new EffectDefinition(EffectType.Texture)),
-                new SpellDefinition("Melty Blood", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 140)),
+                new SpellDefinition("Out of my Way!", ManaCost: 20, [new EffectDefinition(EffectType.Damage, Amount: 35)], Description: "A dismissive but forceful strike."),
+                new SpellDefinition("Marble Phantasm - Seal", ManaCost: 150, [new EffectDefinition(EffectType.Texture)], Description: "Overwrites the room's reality into the Millennial Castle."),
+                new SpellDefinition("Melty Blood", ManaCost: 300, [new EffectDefinition(EffectType.Damage, Amount: 140)], Description: "Her true-form finisher, drawing on vampiric power."),
         ],
         CastingRulesFactory: () => new ArcueidCastingRules());
 
@@ -59,9 +59,9 @@ namespace NasuverseSpellEngine.Application
         StartingMana: 350,
         Spells:
         [
-                new SpellDefinition("Invisible Air", ManaCost: 25, new EffectDefinition(EffectType.Damage, Amount: 40)),
-                new SpellDefinition("Mana Burst", ManaCost: 30, new EffectDefinition(EffectType.AtmosphericBurst)),
-                new SpellDefinition("Excalibur", ManaCost: 300, new EffectDefinition(EffectType.Damage, Amount: 130)),
+                new SpellDefinition("Invisible Air", ManaCost: 25, [new EffectDefinition(EffectType.Damage, Amount: 40)], Description: "An unseen wind-blade strike."),
+                new SpellDefinition("Mana Burst", ManaCost: 30, [new EffectDefinition(EffectType.AtmosphericBurst)], Description: "Saturates the atmosphere with dense dragon mana."),
+                new SpellDefinition("Excalibur", ManaCost: 300, [new EffectDefinition(EffectType.Damage, Amount: 130)], Description: "Her Noble Phantasm-tier finisher."),
         ],
         CastingRulesFactory: () => new SaberCastingRules());
 
@@ -75,12 +75,12 @@ namespace NasuverseSpellEngine.Application
         StartingMana: 99999,
         Spells:
         [
-            new SpellDefinition("Pinprick", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 1)),
-            new SpellDefinition("Half Shatter", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 500)),
-            new SpellDefinition("Obliterate", ManaCost: 0, new EffectDefinition(EffectType.Damage, Amount: 9999)),
-            new SpellDefinition("Debug Entropy Surge", ManaCost: 0, new EffectDefinition(EffectType.Entropy, Amount: 25)),
-            new SpellDefinition("Debug Texture Shift", ManaCost: 0, new EffectDefinition(EffectType.Texture)),
-            new SpellDefinition("Debug Mana Saturate", ManaCost: 0, new EffectDefinition(EffectType.AtmosphericBurst)),
+            new SpellDefinition("Pinprick", ManaCost: 0, [new EffectDefinition(EffectType.Damage, Amount: 1)], Description: "A tiny, deliberate amount of damage."),
+            new SpellDefinition("Half Shatter", ManaCost: 0, [new EffectDefinition(EffectType.Damage, Amount: 500)], Description: "A large chunk of damage for testing durability bands."),
+            new SpellDefinition("Obliterate", ManaCost: 0, [new EffectDefinition(EffectType.Damage, Amount: 9999)], Description: "Overkill damage for testing dojo destruction."),
+            new SpellDefinition("Debug Entropy Surge", ManaCost: 0, [new EffectDefinition(EffectType.Entropy, Amount: 25)], Description: "Adds entropy for testing Heat Death Void."),
+            new SpellDefinition("Debug Texture Shift", ManaCost: 0, [new EffectDefinition(EffectType.Texture)], Description: "Manifests the Millennial Castle for testing."),
+            new SpellDefinition("Debug Mana Saturate", ManaCost: 0, [new EffectDefinition(EffectType.AtmosphericBurst)], Description: "Saturates the atmosphere for testing."),
         ]);
 
         /// <summary>
