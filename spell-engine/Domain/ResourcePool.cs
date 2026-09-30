@@ -6,11 +6,15 @@ namespace NasuverseSpellEngine.Domain
     {
         public int Mana { get; private set; }
 
+        /// <summary>The mana this pool started with, used as its "full" ceiling for effects like a full mana restore.</summary>
+        public int MaxMana { get; }
+
         private readonly ILogger<ResourcePool> _logger;
 
         public ResourcePool(int initialMana, ILogger<ResourcePool> logger)
         {
             Mana = initialMana;
+            MaxMana = initialMana;
             _logger = logger;
             _logger.LogDebug("ResourcePool created with initial mana {Mana}", Mana);
         }
@@ -41,6 +45,13 @@ namespace NasuverseSpellEngine.Domain
             }
             Mana += amount;
             _logger.LogDebug("Added {Amount} mana, new total {Mana}", amount, Mana);
+        }
+
+        /// <summary>Refills mana back to <see cref="MaxMana"/>.</summary>
+        public void RestoreToFull()
+        {
+            Mana = MaxMana;
+            _logger.LogDebug("Mana restored to full ({Mana})", Mana);
         }
     }
 }
