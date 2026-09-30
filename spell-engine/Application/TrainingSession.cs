@@ -47,22 +47,13 @@ namespace NasuverseSpellEngine.Application
         {
             Character activeCharacter = SelectCharacter(roster);
             string? lastAction = null;
-            bool isTraining = true;
 
-            while (isTraining)
+            while (true)
             {
-                (int switchOption, int exitOption) = DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
+                int switchOption = DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
 
-                if (!TryReadSpellChoice(exitOption, out int choice))
+                if (!TryReadSpellChoice(switchOption, out int choice))
                 {
-                    continue;
-                }
-
-                // Allow exit even when dojo destroyed
-                if (choice == exitOption)
-                {
-                    _logger.LogInformation("User selected Exit");
-                    isTraining = false;
                     continue;
                 }
 
@@ -101,7 +92,7 @@ namespace NasuverseSpellEngine.Application
             }
         }
 
-        private bool TryReadSpellChoice(int exitOption, out int choice)
+        private bool TryReadSpellChoice(int switchOption, out int choice)
         {
             Console.Write("Choose a spell: ");
             string input = Console.ReadLine()!; // ! means "trust me, it's not null"
@@ -116,7 +107,7 @@ namespace NasuverseSpellEngine.Application
 
             _logger.LogDebug("User selected {Choice}", choice);
 
-            if (choice < 1 || choice > exitOption)
+            if (choice < 1 || choice > switchOption)
             {
                 _logger.LogWarning("Choice out of range: {Choice}", choice);
                 Console.WriteLine("Invalid choice. Try again.\n");

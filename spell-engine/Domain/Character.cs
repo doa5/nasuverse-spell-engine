@@ -7,6 +7,7 @@ namespace NasuverseSpellEngine.Domain
     public class Character
     {
         public string Name { get; }
+        public string AccentColor { get; }
         public ResourcePool Resources { get; }
         public List<Spell> AvailableSpells { get; private set; }
         public ICastingRules CastingRules { get; }
@@ -25,9 +26,10 @@ namespace NasuverseSpellEngine.Domain
 
         private readonly ILogger<Character> _logger;
 
-        public Character(string name, ResourcePool resources, ILogger<Character> logger, ICastingRules? castingRules = null)
+        public Character(string name, ResourcePool resources, ILogger<Character> logger, ICastingRules? castingRules = null, string accentColor = "grey")
         {
             Name = name;
+            AccentColor = accentColor;
             Resources = resources;
             AvailableSpells = new List<Spell>();
             CastingRules = castingRules ?? new DefaultCastingRules();

@@ -1,5 +1,6 @@
 using NasuverseSpellEngine.Domain;
 using NasuverseSpellEngine.Domain.World;
+using Spectre.Console;
 
 namespace NasuverseSpellEngine.Application
 {
@@ -10,18 +11,21 @@ namespace NasuverseSpellEngine.Application
     /// </summary>
     public static class DashboardRenderer
     {
-        public static (int SwitchOption, int ExitOption) Render(DashboardView view)
+        public static int Render(DashboardView view)
         {
             ClearConsole();
 
-            WriteWorldStatus(view.World);
+            string accent = view.ActiveCharacter.AccentColor;
+            AnsiConsole.Write(new Rule($"[{accent}]Taiga Dojo[/]").RuleStyle(accent));
+
+            WriteWorldStatus(view.World, accent);
             WriteCharacterStatus(view.ActiveCharacter);
             WriteLastAction(view.LastAction);
             WriteEventLog(view.World);
-            (int switchOption, int exitOption) = WriteSpellMenu(view.ActiveCharacter, view.World);
-            WriteTaigaLine(view.World);
+            int switchOption = WriteSpellMenu(view.ActiveCharacter, view.World);
+            WriteTaigaLine(view.World, accent);
 
-            return (switchOption, exitOption);
+            return switchOption;
         }
 
         /// <summary>
@@ -33,89 +37,120 @@ namespace NasuverseSpellEngine.Application
         {
             ClearConsole();
 
-            Console.WriteLine("Select a character:");
+            AnsiConsole.MarkupLine("Select a character:");
             for (int i = 0; i < roster.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {roster[i].Name}");
+                Character character = roster[i];
+                AnsiConsole.MarkupLine($"{i + 1}. [{character.AccentColor}]{character.Name}[/]");
             }
 
-            Console.WriteLine();
+            AnsiConsole.WriteLine();
         }
 
         private static void ClearConsole()
         {
-            // Console.Clear() throws IOException when output isn't attached to a real
-            // console (e.g. piped/redirected input, some test runners). Skip it in that case.
+            // AnsiConsole.Clear() still relies on the console output; guard the same
+            // way as before when output isn't attached to a real console (e.g.
+            // piped/redirected input, some test runners).
             if (!Console.IsOutputRedirected)
             {
-                Console.Clear();
+                AnsiConsole.Clear();
             }
         }
 
-        private static void WriteWorldStatus(WorldState world)
+        private static void WriteWorldStatus(WorldState world, string accent)
         {
-            Console.WriteLine("=== Taiga Dojo ===");
-            Console.WriteLine($"Turn: {world.TurnCount}  Durability: {world.Durability}  Entropy: {world.Entropy}");
-            Console.WriteLine($"Texture: {world.ActiveTexture}  Atmospheric Mana: {world.AtmosphericMana}");
-            Console.WriteLine();
+            var content = new Markup(
+                $"Turn: {world.TurnCount}    Durability: {world.Durability}\n" +
+                $"Entropy: {world.Entropy}%    Texture: {world.ActiveTexture}\n" +
+                $"Atmospheric Mana: {world.AtmosphericMana}");
+
+            var panel = new Panel(content)
+            {
+                Header = new PanelHeader("World Status"),
+                Border = BoxBorder.Rounded,
+            };
+            panel.BorderStyle = new Style(foreground: Style.Parse(accent).Foreground);
+
+            AnsiConsole.Write(panel);
+            AnsiConsole.WriteLine();
         }
 
         private static void WriteCharacterStatus(Character character)
         {
-            Console.WriteLine($"-- {character.Name} --");
-            Console.WriteLine($"Mana: {character.Resources.Mana}");
-            Console.WriteLine();
+            AnsiConsole.MarkupLine($"[{character.AccentColor}]-- {character.Name} --[/]");
+            AnsiConsole.MarkupLine($"Mana: {character.Resources.Mana}");
+            AnsiConsole.WriteLine();
         }
 
         private static void WriteLastAction(string? lastAction)
         {
             if (lastAction is not null)
             {
-                Console.WriteLine(lastAction);
-                Console.WriteLine();
+                AnsiConsole.MarkupLine(Markup.Escape(lastAction));
+                AnsiConsole.WriteLine();
             }
         }
 
-        private static (int SwitchOption, int ExitOption) WriteSpellMenu(Character character, WorldState world)
+        private static int WriteSpellMenu(Character character, WorldState world)
         {
-            Console.WriteLine($"--- {character.Name}'s Spells ---");
+            AnsiConsole.MarkupLine($"[{character.AccentColor}]-- {character.Name}'s Spells --[/]");
+
+            var table = new Table().Border(TableBorder.Rounded);
+            table.AddColumn("#");
+            table.AddColumn("Name");
+            table.AddColumn("Cost");
+            table.AddColumn("Damage");
+            table.AddColumn("Description");
+
             for (int i = 0; i < character.AvailableSpells.Count; i++)
             {
                 Spell spell = character.AvailableSpells[i];
                 int effectiveCost = character.CastingRules.GetManaCost(spell, world);
+                bool canAfford = character.Resources.Mana >= effectiveCost;
                 string costDisplay = effectiveCost != spell.ManaCost
                     ? $"{effectiveCost} (base {spell.ManaCost})"
                     : $"{effectiveCost}";
+                string costMarkup = canAfford ? costDisplay : $"[red]{costDisplay}[/]";
 
-                Console.WriteLine($"{i + 1}. {spell.Name} (Cost: {costDisplay}, Damage: {spell.Damage})");
-                if (spell.Description is not null)
-                {
-                    Console.WriteLine($"     {spell.Description}");
-                }
+                table.AddRow(
+                    (i + 1).ToString(),
+                    Markup.Escape(spell.Name),
+                    costMarkup,
+                    spell.Damage.ToString(),
+                    Markup.Escape(spell.Description ?? string.Empty));
             }
 
+            AnsiConsole.Write(table);
+
             int switchOption = character.AvailableSpells.Count + 1;
-            int exitOption = switchOption + 1;
-            Console.WriteLine($"{switchOption}. Switch Character");
-            Console.WriteLine($"{exitOption}. Exit\n");
-            return (switchOption, exitOption);
+            AnsiConsole.MarkupLine($"{switchOption}. Switch Character");
+            AnsiConsole.WriteLine();
+            return switchOption;
         }
 
         private static void WriteEventLog(WorldState world)
         {
-            Console.WriteLine("-- Recent Events --");
+            AnsiConsole.Write(new Rule("Recent Events").LeftJustified());
             foreach (string eventMessage in world.RecentEvents)
             {
-                Console.WriteLine($"  {eventMessage}");
+                AnsiConsole.MarkupLine($"  {Markup.Escape(eventMessage)}");
             }
 
-            Console.WriteLine();
+            AnsiConsole.WriteLine();
         }
 
-        private static void WriteTaigaLine(WorldState world)
+        private static void WriteTaigaLine(WorldState world, string accent)
         {
-            Console.WriteLine(TaigaCommentary.GetLine(world));
-            Console.WriteLine();
+            var panel = new Panel(Markup.Escape(TaigaCommentary.GetLine(world)))
+            {
+                Header = new PanelHeader("Taiga"),
+                Border = BoxBorder.Rounded,
+            };
+            panel.BorderStyle = new Style(foreground: Style.Parse(accent).Foreground);
+
+            AnsiConsole.Write(panel);
+            AnsiConsole.WriteLine();
         }
     }
 }

@@ -31,7 +31,8 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("I need more time!", ManaCost: 0, [new EffectDefinition(EffectType.ExtendTransform)], Description: "Throws more of her time to the future, extending Redshift at an escalating entropy cost."),
                 new SpellDefinition("I need more mana!", ManaCost: 0, [new EffectDefinition(EffectType.RestoreMana, Amount: 30)], Description: "Refills her mana to full at the cost of entropy."),
             ],
-            TransformStateFactory: () => new AokoTransformState());
+            TransformStateFactory: () => new AokoTransformState(),
+            AccentColor: "blue");
 
     /// <summary>
     /// True Ancestor and last remaining Brunestud. Marble Phantasm - Seal overwrites the
@@ -47,7 +48,8 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Marble Phantasm - Seal", ManaCost: 150, [new EffectDefinition(EffectType.Texture)], Description: "Overwrites the room's reality into the Millennial Castle."),
                 new SpellDefinition("Melty Blood", ManaCost: 300, [new EffectDefinition(EffectType.Damage, Amount: 140)], Description: "Her true-form finisher, drawing on vampiric power."),
         ],
-        CastingRulesFactory: () => new ArcueidCastingRules());
+        CastingRulesFactory: () => new ArcueidCastingRules(),
+        AccentColor: "white");
 
     /// <summary>
     /// King of Knights. Standard attack (Invisible Air) is an unseen wind-blade strike;
@@ -63,12 +65,14 @@ namespace NasuverseSpellEngine.Application
                 new SpellDefinition("Mana Burst", ManaCost: 30, [new EffectDefinition(EffectType.AtmosphericBurst)], Description: "Saturates the atmosphere with dense dragon mana."),
                 new SpellDefinition("Excalibur", ManaCost: 300, [new EffectDefinition(EffectType.Damage, Amount: 130)], Description: "Her Noble Phantasm-tier finisher."),
         ],
-        CastingRulesFactory: () => new SaberCastingRules());
+        CastingRulesFactory: () => new SaberCastingRules(),
+        AccentColor: "yellow");
 
     /// <summary>
     /// Debug-only character with simple, predictable spells for manually smoke-testing
     /// world-state thresholds (durability bands, destruction, etc.) without needing
-    /// dozens of real casts.
+    /// dozens of real casts. Intentionally excluded from <see cref="Roster"/> so it
+    /// never shows up in normal play, but kept available for future debugging.
     /// </summary>
     public static readonly CharacterDefinition Debug = new(
         Name: "Debug",
@@ -81,14 +85,15 @@ namespace NasuverseSpellEngine.Application
             new SpellDefinition("Debug Entropy Surge", ManaCost: 0, [new EffectDefinition(EffectType.Entropy, Amount: 25)], Description: "Adds entropy for testing Heat Death Void."),
             new SpellDefinition("Debug Texture Shift", ManaCost: 0, [new EffectDefinition(EffectType.Texture)], Description: "Manifests the Millennial Castle for testing."),
             new SpellDefinition("Debug Mana Saturate", ManaCost: 0, [new EffectDefinition(EffectType.AtmosphericBurst)], Description: "Saturates the atmosphere for testing."),
-        ]);
+        ],
+        AccentColor: "grey");
 
-        /// <summary>
-        /// Every playable character definition, in menu display order. Adding a new
-        /// character only requires adding it here (and defining it above) - no other
-        /// code needs to change to make it selectable.
-        /// </summary>
-        public static readonly IReadOnlyList<CharacterDefinition> Roster =
+    /// <summary>
+    /// Every playable character definition, in menu display order. Adding a new
+    /// character only requires adding it here (and defining it above) - no other
+    /// code needs to change to make it selectable.
+    /// </summary>
+    public static readonly IReadOnlyList<CharacterDefinition> Roster =
         [
             Aoko,
             Arcueid,
