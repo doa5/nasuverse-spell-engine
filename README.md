@@ -1,6 +1,6 @@
 # Nasuverse Spell Engine
 
-A single-screen, turn-based **Nasuverse magic simulator** built in C# (.NET 10) to explore modular domain design, shared world-state mutation, and cross-system magical interactions. Instead of a scrolling console log, the application behaves like a live, redrawing dashboard: selecting characters and casting spells mutates a shared environment in real time.
+A single-screen, turn-based **Nasuverse magic simulator** built in C# (.NET 10) to explore modular domain design & shared world-state mutation. The application behaves like a live, redrawing dashboard: selecting characters and casting spells mutates a shared environment in real time.
 
 ## Concept
 
