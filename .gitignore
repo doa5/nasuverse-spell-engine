@@ -429,4 +429,7 @@ FodyWeavers.xsd
 *.msp
 
 # Official VS Code C# Dev Kit Extension exclusion
+
+# GitHub Copilot IDE state and plans (local-only)
+**/.copilot/
 #*.lscache
