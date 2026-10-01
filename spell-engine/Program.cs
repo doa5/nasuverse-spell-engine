@@ -16,8 +16,13 @@ ILogger<ResourcePool> resourceLogger = provider.GetRequiredService<ILogger<Resou
 
 logger.LogInformation("Starting Taiga Dojo sandbox");
 
-WorldState world = new WorldState();
-IReadOnlyList<Character> roster = CharacterFactory.CreateRoster(CharacterCatalog.Roster, charLogger, resourceLogger);
-
 TrainingSession session = provider.GetRequiredService<TrainingSession>();
-session.Run(roster, world);
+
+bool playAgain;
+do
+{
+    WorldState world = new WorldState();
+    IReadOnlyList<Character> roster = CharacterFactory.CreateRoster(CharacterCatalog.Roster, charLogger, resourceLogger);
+    playAgain = session.Run(roster, world);
+} while (playAgain);
+

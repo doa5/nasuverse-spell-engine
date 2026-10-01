@@ -30,8 +30,15 @@ namespace NasuverseSpellEngine.Application
         }
 
         private const string SwitchCharacterChoice = "Switch Character";
+        private const string RetryChoice = "Retry";
+        private const string ExitChoice = "Exit";
 
-        public void Run(IReadOnlyList<Character> roster, WorldState world)
+        /// <summary>
+        /// Runs a single training session to completion. Returns true if the
+        /// player chose to retry (caller should start a fresh session with a
+        /// new <see cref="WorldState"/>), or false if the player chose to exit.
+        /// </summary>
+        public bool Run(IReadOnlyList<Character> roster, WorldState world)
         {
             Character activeCharacter = SelectCharacter(roster);
             string? lastAction = null;
@@ -67,9 +74,21 @@ namespace NasuverseSpellEngine.Application
                     lastAction += " The Taiga Dojo has been destroyed!";
                     DashboardRenderer.Render(new DashboardView(activeCharacter, world, lastAction));
                     DashboardRenderer.RenderVictory(activeCharacter);
-                    return;
+                    return ReadPlayAgainChoice();
                 }
             }
+        }
+
+        private bool ReadPlayAgainChoice()
+        {
+            var prompt = new SelectionPrompt<string>()
+                .Title("What would you like to do?")
+                .HighlightStyle(new Style(decoration: Decoration.Underline))
+                .AddChoices(RetryChoice, ExitChoice);
+
+            string choice = AnsiConsole.Prompt(prompt);
+            _logger.LogDebug("User selected {Choice} after victory", choice);
+            return choice == RetryChoice;
         }
 
         private string ReadSpellChoice(Character character)
