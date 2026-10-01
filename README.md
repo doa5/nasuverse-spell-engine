@@ -4,7 +4,7 @@ A single-screen, turn-based **Nasuverse magic simulator** built in C# (.NET 10) 
 
 ## Concept
 
-Rather than a traditional combat loop, this sandbox focuses on **systemic interaction**. Three Nasuverse characters share a single room. Their actions alter environmental variables (atmospheric mana density, entropy, reality texture) that in turn change how the *other* characters' spells behave.
+This sandbox focuses on **systemic interaction**. Three Nasuverse characters share a single room. Their actions alter environmental variables (atmospheric mana density, entropy, reality texture) that in turn change how the *other* characters' spells behave.
 
 ### Live Terminal Dashboard
 
