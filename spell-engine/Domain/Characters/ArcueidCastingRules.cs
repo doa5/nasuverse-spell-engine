@@ -44,7 +44,7 @@ namespace NasuverseSpellEngine.Domain.Characters
             {
                 // Saber's high-density dragon mana creates noise in the natural order,
                 // making Arcueid's environmental manipulation harder until it's purged.
-                return CastingRuleDefaults.ApplyHeatDeathTax((int)(baseCost * AtmosphericInterferenceManaCostMultiplier), world);
+                return CastingRuleDefaults.ApplyHeatDeathTax((int)(Math.Ceiling(baseCost * AtmosphericInterferenceManaCostMultiplier)), world);
             }
 
             return CastingRuleDefaults.ApplyHeatDeathTax(baseCost, world);
