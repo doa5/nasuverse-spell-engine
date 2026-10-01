@@ -4,11 +4,11 @@ A single-screen, turn-based **Nasuverse magic simulator** built in C# (.NET 10) 
 
 ## Concept
 
-Rather than a traditional combat loop, this sandbox focuses on **systemic interaction**. Three Nasuverse characters — each built on a fundamentally different magic system — share a single room. Their actions don't just deal damage; they alter environmental variables (atmospheric mana density, entropy, reality texture) that in turn change how the *other* characters' spells behave.
+Rather than a traditional combat loop, this sandbox focuses on **systemic interaction**. Three Nasuverse characters share a single room. Their actions alter environmental variables (atmospheric mana density, entropy, reality texture) that in turn change how the *other* characters' spells behave.
 
 ### Live Terminal Dashboard
 
-The console is cleared and redrawn every turn, simulating a live monitor rather than a scrolling log:
+The console is cleared and redrawn every turn, simulating a live monitor:
 
 - **Header / Environmental Panel** — active turn count, room durability, reality texture, entropy %, and mana density.
 - **Active Character Panel** — the selected character's current mana and unique subsystem traits.
@@ -47,7 +47,7 @@ The core showcase is how **Aoko**, **Arcueid**, and **Saber** modify — and rea
 ### Aoko Aozaki — The Fifth Magic
 
 - **Mechanic:** Time-borrowing and thermodynamic entropy redirection instead of standard mana efficiency.
-- **Signature Spells:** *Earthlight Starbow* (standard heavy strike) and *Fifth Magic: Time Borrow* (zero mana cost, massive damage, but adds +35% to global Heat Death Entropy).
+- **Signature Spells:** *Earthlight Starbow* (standard heavy strike) and *Fifth Magic: Redshift* (zero mana cost, switches character to adult Aoko, but adds +35% to global Heat Death Entropy).
 - **World Impact:** Pushing entropy to 100% transforms the room into a Heat Death Void.
 - **Interactions:**
   - With **Saber**: free-casts standard spells off ambient atmospheric mana when the room is saturated.
@@ -65,7 +65,7 @@ The core showcase is how **Aoko**, **Arcueid**, and **Saber** modify — and rea
 ### Saber / Artoria Pendragon — King of Knights
 
 - **Mechanic:** Internal high-density mana production via her Dragon Core, discharging excess energy into the surrounding air.
-- **Signature Spells:** *Mana Burst* (saturates atmosphere for 3 turns) and *Excalibur* (massive directional beam attack).
+- **Signature Spells:** *Mana Burst* (saturates atmosphere for 3 turns) and *Excalibur*.
 - **World Impact:** Sets atmospheric mana density to HIGH for a temporary duration.
 - **Interactions:**
   - With **Aoko**: atmospheric saturation grants free energy, letting Aoko cast heavy spells without relying on entropy-generating Fifth Magic.
@@ -134,12 +134,3 @@ dotnet run
 ```powershell
 dotnet build spell-engine.slnx
 ```
-
-## Roadmap
-
-- [x] `WorldState` container (turn tracking, durability, entropy, texture, rolling event log)
-- [x] Dashboard rendering engine (header, active character, spell menu, event feed)
-- [x] Character & spell catalog (Aoko, Arcueid, Saber)
-- [x] Main training session loop (selection, casting, turn advancement)
-- [ ] Additional characters / magic systems
-- [ ] Expanded environmental states and reality textures
