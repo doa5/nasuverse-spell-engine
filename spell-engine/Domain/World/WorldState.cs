@@ -5,7 +5,7 @@ namespace NasuverseSpellEngine.Domain.World
     public sealed class WorldState
     {
         private const int MaxDurability = 1000;
-        private const int MaxEntropy = 100;
+        public const int MaxEntropy = 100;
         private const int MaxRecentEvents = 6;
         private const int HeatDeathVoidPassiveDecay = 20;
 

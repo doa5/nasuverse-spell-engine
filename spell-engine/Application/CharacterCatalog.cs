@@ -22,7 +22,7 @@ namespace NasuverseSpellEngine.Application
             [
                 new SpellDefinition("Right Hook", ManaCost: 0, [new EffectDefinition(EffectType.Damage, Amount: 10)], Description: "A quick, mana-free jab. Weak, but always available."),
                 new SpellDefinition("Starmine", ManaCost: 40, [new EffectDefinition(EffectType.Damage, Amount: 60)], Description: "Teen Aoko's strongest normal magecraft - a focused explosive bolt."),
-                new SpellDefinition("Redshift", ManaCost: 30, [new EffectDefinition(EffectType.Transform), new EffectDefinition(EffectType.Entropy, Amount: 20)], Description: "Borrows her future self's power, transforming into Adult Aoko for several turns at the cost of entropy."),
+                new SpellDefinition("Redshift", ManaCost: 0, [new EffectDefinition(EffectType.Transform), new EffectDefinition(EffectType.Entropy, Amount: 20)], Description: "Borrows her future self's power, transforming into Adult Aoko for several turns at the cost of entropy."),
             ],
             CastingRulesFactory: () => new AokoCastingRules(),
             TransformedSpells:

@@ -88,7 +88,7 @@ spell-engine/
 │   ├── Spell.cs
 │   ├── SpellEffectResult.cs
 │   ├── ResourcePool.cs
-│   ├── ICastingRules.cs / DefaultCastingRules.cs
+│   ├── ICastingRules.cs / StandardCastingRules.cs / CastingRuleDefaults.cs
 │   ├── ITransformState.cs
 │   ├── Characters/                # Character-specific casting rules & transform states
 │   │   ├── AokoCastingRules.cs

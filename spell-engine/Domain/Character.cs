@@ -46,7 +46,7 @@ namespace NasuverseSpellEngine.Domain
             _transformedAccentColor = transformedAccentColor;
             Resources = resources;
             AvailableSpells = new List<Spell>();
-            CastingRules = castingRules ?? new DefaultCastingRules();
+            CastingRules = castingRules ?? new StandardCastingRules();
             _logger = logger;
         }
 

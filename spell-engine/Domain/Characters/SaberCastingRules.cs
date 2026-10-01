@@ -12,9 +12,13 @@ namespace NasuverseSpellEngine.Domain.Characters
     /// atmospheric mana is saturating the room, she draws on it directly and pays
     /// nothing to cast.
     /// </summary>
-    public class SaberCastingRules : DefaultCastingRules
+    public class SaberCastingRules : ICastingRules
     {
-        public override int GetManaCost(Spell spell, WorldState world) =>
-            world.AtmosphericMana ? 0 : ApplyHeatDeathTax(spell.ManaCost, world);
+        public bool CanCast(Spell spell, WorldState world) => true;
+
+        public double GetDamageMultiplier(WorldState world) => CastingRuleDefaults.GetDamageMultiplier(world);
+
+        public int GetManaCost(Spell spell, WorldState world) =>
+            world.AtmosphericMana ? 0 : CastingRuleDefaults.ApplyHeatDeathTax(spell.ManaCost, world);
     }
 }
